@@ -1,0 +1,64 @@
+/* ============================= 
+0. CSS Variables of fav colours
+============================= */
+:root {
+    --fontVintage: #e0eae4;
+    --fontVintageDark: #a2aaa5;
+    --colorWhite: #fff;
+    --colorElectricBlue: #0047ab;
+    --colorElectricBlue90: rgba(0, 71, 171, 0.9);
+    --colorMustard: #c6ab20;
+    --colorMustard70: rgba(198, 171, 32, 0.7);
+    --colorLemon: #fdcc52;
+    --colorWheat: rgba(245, 222, 179, 1);
+    --colorWheat50: rgba(245,222,179, 0.5);
+    --colorWheat80: rgba(245,222,179, 0.8);
+    --colorRed: #cd071e;
+    --colorRed50: rgb(205, 7, 30, 0.5);
+    --colorRed70: rgb(205, 7, 30, 0.7);
+    --colorGreenPale: rgb(110, 139, 116);
+    --colorGreenTEST50: rgba(150, 194, 78, 0.5);
+    --colorGreenTEST70: rgba(150, 194, 78, 0.7);
+    --colorGreen: rgba(84, 132, 52, 1);
+    --colorGreen50: rgba(84, 132, 52, 0.5);
+    --colorGreen70: rgba(84, 132, 52, 0.7);
+    --colorGreenFern: rgb(51, 125, 58);
+    --colorTealDark: rgba(58, 128, 152, 1);
+    --colorTealDark50: rgba(58, 128, 152, 0.5);
+    --colorTealDarker: rgb(11, 70, 82);
+    --colorTealDarker2: rgb(3, 52, 62);
+    --colorTealMedium: rgb(32, 157, 153);
+    --colorTealLighter: #d8e6e6;
+    --colorTealLight: #99cccc;
+    --colorOrange: rgba(216, 95, 38, 1);
+    --colorOrange50: rgba(216, 95, 38, 0.5);
+    --colorOrange70: rgba(216, 95, 38, 0.7);
+    --colorOrangeBright: rgb(250, 80, 2);
+    --colorBrownLight: #62523a;
+    --colorBrownDark: rgba(84, 64, 44, 1);
+    --colorBrownDark50: rgba(84, 64, 44, 0.5);
+    --colorBrownMonkeyLight: rgba(151, 132, 108, 1);  
+    --colorBrownMonkeyLight50: rgba(151, 132, 108, 0.5);  
+    --colorBrownMonkey: rgba(129, 95, 37, 1);  
+    --colorBrownMonkey50: rgba(129, 95, 37, 0.5); 
+    --colorCyanDark: rgba(20, 70, 86, 1);
+    --colorCyanDark50: rgba(20, 70, 86, 0.5);
+    --colorViolet: #7166c2;
+    --colorPurple: #611bbc;
+    --colorPurpleDark: #5318a0;
+    --bgColor:#607d8b;
+    --bgColorDark: #313138;
+    --bgColorLight: #edc9c9;
+    --colorBrownDarker: #432a11;
+    --colorYellowLight: #f4f491;
+    --colorGreyLight: #b9b6b6;
+    --colorCharcoal: rgb(69, 69, 69);
+    --colorCharcoal70: rgba(69, 69, 69, 0.7);
+    --colorCharcoalDark: #444444;
+    --colorCharcoalDarker: #222222;
+    --colorPink: #a45c84;
+    --colorPink90: rgba(164, 92, 132, 0.5);
+    --colorPinkDark: rgb(138, 66, 106);
+    --colorBrown1: #be7e4a;
+
+}
