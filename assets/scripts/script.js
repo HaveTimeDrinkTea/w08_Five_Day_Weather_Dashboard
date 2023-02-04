@@ -17,7 +17,7 @@ $(document).ready(function() {
    };
 
    function getWeather() {
-      // Here we are building the URL we need to query the database
+      // Get the current weather data for a location
       let queryURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric&appid=" + APIKey;
 
       $.ajax({
@@ -28,9 +28,24 @@ $(document).ready(function() {
          });
    }
 
+   // let isUseCnt = true;
+   let isUseCnt = false;
+   let cntNum =5;
+   let cntNumParam;
+
+   if (isUseCnt) {
+      cntNumParam ="&cnt=" + cntNum;
+   } else {
+
+      cntNumParam ="";
+   };
+
+
+
+
    function get5DayForecast() {
-      // Here we are building the URL we need to query the database
-      let queryURL5Day = "https://api.openweathermap.org/data/2.5/forecast?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric&appid=" + APIKey;
+   // Get the 5-day weather forecast for a location
+      let queryURL5Day = "https://api.openweathermap.org/data/2.5/forecast?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric" + cntNumParam + "&appid=" + APIKey;
 
       $.ajax({
          url: queryURL5Day,
@@ -42,6 +57,7 @@ $(document).ready(function() {
 
 
    function getLocCorr(cityName) {
+      //get the coordinates of city based on user input.
       $.ajax({
          url: queryUrlGetLoc,
          method: "GET"
@@ -50,12 +66,21 @@ $(document).ready(function() {
             locCorr.lat = resLocation.city.coord.lat,
             locCorr.lon = resLocation.city.coord.lon,
             console.log("resLocation:", locCorr);
+            // User input validation before getting weather data
+
             getWeather();
             get5DayForecast();
+      }).fail(function(e) {
+         console.log("error is:", e)
+         console.log("response:", e.responseJSON);
+         return;
+
       });
    }
 
    getLocCorr(cityName);
+
+   console.log("day is:", dayjs.unix(1675522800).format("DD-MMM-YYYY, HH:MM"));
 
 
 
