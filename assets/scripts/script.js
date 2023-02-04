@@ -28,6 +28,18 @@ $(document).ready(function() {
          });
    }
 
+   function get5DayForecast() {
+      // Here we are building the URL we need to query the database
+      let queryURL5Day = "https://api.openweathermap.org/data/2.5/forecast?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric&appid=" + APIKey;
+
+      $.ajax({
+         url: queryURL5Day,
+         method: "GET"
+         }).then(function(res5Day) {
+            console.log("Weather Forecast:", res5Day);
+         });
+   }
+
 
    function getLocCorr(cityName) {
       $.ajax({
@@ -39,7 +51,8 @@ $(document).ready(function() {
             locCorr.lon = resLocation.city.coord.lon,
             console.log("resLocation:", locCorr);
             getWeather();
-         });
+            get5DayForecast();
+      });
    }
 
    getLocCorr(cityName);
