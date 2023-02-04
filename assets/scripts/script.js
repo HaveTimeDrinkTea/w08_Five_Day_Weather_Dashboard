@@ -16,13 +16,18 @@ $(document).ready(function() {
       lon : "",
    };
 
-   var todayDate = new Date();
-   var todayDateString = dayjs(todayDate).format("DD-MMM-YYYY");
-
-   var todayDateUnix = Date.parse(todayDateString);
-   console.log("todayDate:", todayDate);
+   var now = dayjs();
+   var nowMidnightStartUnix = dayjs(now.startOf("date")).valueOf();
+   var nowMidnightEndUnix = dayjs(now.endOf("date")).valueOf();
+   console.log("nowMidnight EOD:", nowMidnightEndUnix, "and that is actually:", dayjs(nowMidnightEndUnix).format("DD-MMM-YYYY HH:mm:ss"));
+   var todayDateString = dayjs(now).format("DD-MMM-YYYY");
+  
+   // var todayDateUnix = dayjs("2023-02-04").unix();
+   var todayDateUnix = dayjs(todayDateString).valueOf();
+   // console.log("todayDate:", now);
    console.log("todayDateString:", todayDateString);
-   console.log("todayDateUnix:", todayDateUnix);
+   console.log("todayDateUnix:", todayDateUnix, "and that is actually:", dayjs(todayDateUnix).format("DD-MMM-YYYY"));
+ 
 
 
    function getWeather() {
@@ -50,7 +55,7 @@ $(document).ready(function() {
    };
 
 
-
+   let res5DayArray;
 
    function get5DayForecast() {
    // Get the 5-day weather forecast for a location
@@ -59,8 +64,10 @@ $(document).ready(function() {
       $.ajax({
          url: queryURL5Day,
          method: "GET"
-         }).then(function(res5Day) {
-            console.log("Weather Forecast:", res5Day);
+         }).then(function(results) {
+            res5DayArray = results;
+            console.log("Weather Forecast:", res5DayArray);
+            prep5DayData(res5DayArray) ;
          });
    }
 
@@ -89,38 +96,72 @@ $(document).ready(function() {
 
    getLocCorr(cityName);
 
-   console.log("compare date unix 1675663600 day is:", dayjs(1675663600 * 1000).format("DD-MMM-YYYY, HH:MM"));
-   console.log("today unix 1680390000 day is:", dayjs(1675468800000).format("DD-MMM-YYYY, HH:MM"));
-   
 
-   let test = dayjs(1675519348000).isBefore(dayjs(1675663600 * 1000)) ;
+   function getDate(unixDate) {
 
-   console.log("test:", test, "bec", dayjs(1675519348000).format("DD-MMM-YYYY"), " is before", dayjs(1675663600 * 1000).format("DD-MMM-YYYY"));
-
-   function getDate(unixdate) {
-
-      let dayString = dayjs.unix(unixdate).format("DD-MMM-YYYY, HH:MM");
+      let dayString = dayjs(unixDate).format("DD-MMM-YYYY, HH:mm:ss");
       return dayString;
    }
 
-   function prep5DayData(resLocation) {
+
+
+   function prep5DayData(res5DayArray) {
       
-      let dayCounter = 0;
-      let createArrayString ="let day" + dayCounter +";";
-      let createArray;
+      
+      // console.log("todayDateUnix:", nowMidnightEndUnix, "or", getDate(nowMidnightEndUnix));
 
-
-      for (let i = 0; i < resLocation.length; i++) {
+      // console.log("the difference is :", dayjs('2023-02-04').diff(dayjs('2023-02-05'),"day"));
          
-         // if ( === ) {
+      let day0Array = [];
+      let day1Array = [];
+      let day2Array = [];
+      let day3Array = [];
+      let day4Array = [];
+      let day5Array = [];
+      let dayDiff;
 
+      console.log("res5DayArray.list.length:", res5DayArray.list.length);
 
-         // } 
-         dayCounter++;
-         createArray = eval(createArrayString);
+      for (let i = 0; i < res5DayArray.list.length; i++) {
+
+         let arrayDateUnix = res5DayArray.list[i].dt * 1000;
+
+         dayDiff = dayjs(getDate(arrayDateUnix)).diff(getDate(nowMidnightStartUnix), "day");
+         console.log(i, ": for", getDate(arrayDateUnix), ", the diff is:", dayDiff);
+
+         switch(dayDiff) {
+            case 1:
+               // code block
+               day1Array.push(res5DayArray.list[i]);
+               console.log("day1Array:", day1Array);
+               break;
+            case 2:
+               // code block
+               day2Array.push(res5DayArray.list[i]);
+               console.log("day2Array:", day2Array);
+               break;
+            case 3:
+               // code block
+               day3Array.push(res5DayArray.list[i]);
+               console.log("day3Array:", day3Array);
+               break;
+            case 4:
+               // code block
+               day4Array.push(res5DayArray.list[i]);
+               console.log("day4Array:", day4Array);
+               break;
+            case 5:
+               // code block
+               day5Array.push(res5DayArray.list[i]); 
+               console.log("day5Array:", day5Array);
+               break;   
+            default:
+               day0Array.push(res5DayArray.list[i]); 
+               console.log("day0Array:", day0Array);
+         };
 
       };
-      
+
    }
 
 
