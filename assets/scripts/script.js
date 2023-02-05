@@ -6,6 +6,11 @@ $(document).ready(function() {
    //-- START of document.ready
    //--====================== 
    //--====================== 
+
+
+   //--==============================================      
+   //-- 1. Set API key and get user input city and get it's coords
+   //--==============================================
    var APIKey = "23c1d2729442f28b96176ff1560c919f";
 
    let cityName = "london";
@@ -15,83 +20,6 @@ $(document).ready(function() {
       lat : "",
       lon : "",
    };
-
-   var now = dayjs();
-   var nowMidnightStartUnix = dayjs(now.startOf("date")).valueOf();
-   var nowMidnightEndUnix = dayjs(now.endOf("date")).valueOf();
-   console.log("nowMidnight EOD:", nowMidnightEndUnix, "and that is actually:", dayjs(nowMidnightEndUnix).format("DD-MMM-YYYY HH:mm:ss"));
-   var todayDateString = dayjs(now).format("DD-MMM-YYYY");
-  
-   // var todayDateUnix = dayjs("2023-02-04").unix();
-   var todayDateUnix = dayjs(todayDateString).valueOf();
-   // console.log("todayDate:", now);
-   console.log("todayDateString:", todayDateString);
-   console.log("todayDateUnix:", todayDateUnix, "and that is actually:", dayjs(todayDateUnix).format("DD-MMM-YYYY"));
- 
-
-
-   function getWeather() {
-      // Get the current weather data for a location
-      let queryURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric&appid=" + APIKey;
-
-      $.ajax({
-         url: queryURL,
-         method: "GET"
-         }).then(function(resWeather) {
-            console.log("resWeather:", resWeather);
-         });
-   }
-
-   // let isUseCnt = true;
-   let isUseCnt = false;
-   let cntNum =5;
-   let cntNumParam;
-
-   if (isUseCnt) {
-      cntNumParam ="&cnt=" + cntNum;
-   } else {
-
-      cntNumParam ="";
-   };
-
-
-   let res5DayArray;
-
-
-   let day0Array = [];
-   let day1Array = [];
-   let day2Array = [];
-   let day3Array = [];
-   let day4Array = [];
-   let day5Array = [];
-   let dayDiff;
-
-
-   let temp;
-   var tempMax;
-   var tempMin;
-   var humidity;
-   var humidMax;
-   var humidMin
-   let wind;
-   var windMax;
-   var windMin;
-
-   function get5DayForecast() {
-   // Get the 5-day weather forecast for a location
-      let queryURL5Day = "https://api.openweathermap.org/data/2.5/forecast?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric" + cntNumParam + "&appid=" + APIKey;
-
-      $.ajax({
-         url: queryURL5Day,
-         method: "GET"
-         }).then(function(results) {
-            res5DayArray = results;
-            console.log("Weather Forecast:", res5DayArray);
-            prep5DayData(res5DayArray) ;
-            getPeriodMaxMin(day1Array);
-         });
-   }
-
 
    function getLocCorr(cityName) {
       //get the coordinates of city based on user input.
@@ -120,13 +48,106 @@ $(document).ready(function() {
    getLocCorr(cityName);
 
 
-   function getDate(unixDate) {
+   //--==============================================   
+   //-- 2. Get current day 
+   //--==============================================   
+   var now = dayjs();
+   var nowMidnightStartUnix = dayjs(now.startOf("date")).valueOf();
+   var nowMidnightEndUnix = dayjs(now.endOf("date")).valueOf();
+   console.log("nowMidnight EOD:", nowMidnightEndUnix, "and that is actually:", dayjs(nowMidnightEndUnix).format("DD-MMM-YYYY HH:mm:ss"));
+   var todayDateString = dayjs(now).format("DD-MMM-YYYY");
+  
+   // var todayDateUnix = dayjs("2023-02-04").unix();
+   var todayDateUnix = dayjs(todayDateString).valueOf();
+   // console.log("todayDate:", now);
+   console.log("todayDateString:", todayDateString);
+   console.log("todayDateUnix:", todayDateUnix, "and that is actually:", dayjs(todayDateUnix).format("DD-MMM-YYYY"));
 
+   function getDate(unixDate) {
       let dayString = dayjs(unixDate).format("DD-MMM-YYYY, HH:mm:ss");
       return dayString;
    }
+ 
+
+   //--==============================================   
+   //-- 3. Get current weather 
+   //--==============================================   
+
+   function getWeather() {
+      // Get the current weather data for a location
+      let queryURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric&appid=" + APIKey;
+
+      $.ajax({
+         url: queryURL,
+         method: "GET"
+         }).then(function(resWeather) {
+            console.log("resWeather:", resWeather);
+         });
+   }
+
+   // let isUseCnt = true;
+   let isUseCnt = false;
+   let cntNum =5;
+   let cntNumParam;
+
+   if (isUseCnt) {
+      cntNumParam ="&cnt=" + cntNum;
+   } else {
+
+      cntNumParam ="";
+   };
 
 
+   //--==============================================   
+   //-- 4. Get Five Day Forecast
+   //--==============================================     
+
+   let res5DayArray;
+
+   let day0Array = [];
+   let day1Array = [];
+   let day2Array = [];
+   let day3Array = [];
+   let day4Array = [];
+   let day5Array = [];
+   let dayDiff;
+
+
+   let temp;
+   var tempMax;
+   var tempMin;
+   var humidity;
+   var humidMax;
+   var humidMin
+   let wind;
+   var windMax;
+   var windMin;
+
+   var fiveDayMaxMinArr;
+
+
+   function get5DayForecast() {
+   // Get the 5-day weather forecast for a location
+      let queryURL5Day = "https://api.openweathermap.org/data/2.5/forecast?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric" + cntNumParam + "&appid=" + APIKey;
+
+      $.ajax({
+         url: queryURL5Day,
+         method: "GET"
+         }).then(function(results) {
+            res5DayArray = results;
+            console.log("Weather Forecast:", res5DayArray);
+            prep5DayData(res5DayArray) ;
+            getPeriodMaxMin(day1Array);
+            getPeriodMaxMin(day2Array);
+            getPeriodMaxMin(day3Array);
+            getPeriodMaxMin(day4Array);
+            getPeriodMaxMin(day5Array);
+         });
+   }
+   
+   
+   //--------------------------------        
+   //-- 4.1 Put Each day in 5Day Forecast in own array
 
    function prep5DayData(res5DayArray) {
       
@@ -182,9 +203,10 @@ $(document).ready(function() {
    }
 
 
+   //--------------------------------        
+   //-- 4.2 Compute the Max and Min of each day in 5Day forecast 
 
-
-
+   var dayCnt = 0;
 
    function getPeriodMaxMin(period_array) {
 
@@ -247,8 +269,38 @@ $(document).ready(function() {
       console.log("humidity:", humidMax, "/", humidMin);
       console.log("wind:", windMax, "/", windMin);
 
+      if (dayCnt === 0) {
+         fiveDayMaxMinArr = [
+            {
+               day : dayCnt,
+               tempMax: tempMax,
+               tempMin: tempMin, 
+               humidMax: humidMax,
+               humidMin: humidMin,
+               windMax: windMax,
+               windMin: windMin,        
+            },
+         ];
+      } else {
+         fiveDayMaxMinArr.push(
+            {
+               day : dayCnt,
+               tempMax: tempMax,
+               tempMin: tempMin, 
+               humidMax: humidMax,
+               humidMin: humidMin,
+               windMax: windMax,
+               windMin: windMin,        
+            }
+         )
+      };
+
+      dayCnt ++;
+      console.log("fiveDayMaxMinArr:", fiveDayMaxMinArr);
 
    } // end of function getPeriodMaxMin()
+
+
 
 
 //--PW temperature, precipitation, pressure, wind, humidity, and cloudiness.
