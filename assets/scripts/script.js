@@ -57,6 +57,26 @@ $(document).ready(function() {
 
    let res5DayArray;
 
+
+   let day0Array = [];
+   let day1Array = [];
+   let day2Array = [];
+   let day3Array = [];
+   let day4Array = [];
+   let day5Array = [];
+   let dayDiff;
+
+
+   let temp;
+   var tempMax;
+   var tempMin;
+   var humidity;
+   var humidMax;
+   var humidMin
+   let wind;
+   var windMax;
+   var windMin;
+
    function get5DayForecast() {
    // Get the 5-day weather forecast for a location
       let queryURL5Day = "https://api.openweathermap.org/data/2.5/forecast?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric" + cntNumParam + "&appid=" + APIKey;
@@ -68,6 +88,7 @@ $(document).ready(function() {
             res5DayArray = results;
             console.log("Weather Forecast:", res5DayArray);
             prep5DayData(res5DayArray) ;
+            getPeriodMaxMin(day1Array);
          });
    }
 
@@ -86,6 +107,8 @@ $(document).ready(function() {
 
             getWeather();
             get5DayForecast();
+
+
       }).fail(function(e) {
          console.log("error is:", e)
          console.log("response:", e.responseJSON);
@@ -112,13 +135,7 @@ $(document).ready(function() {
 
       // console.log("the difference is :", dayjs('2023-02-04').diff(dayjs('2023-02-05'),"day"));
          
-      let day0Array = [];
-      let day1Array = [];
-      let day2Array = [];
-      let day3Array = [];
-      let day4Array = [];
-      let day5Array = [];
-      let dayDiff;
+
 
       console.log("res5DayArray.list.length:", res5DayArray.list.length);
 
@@ -163,6 +180,75 @@ $(document).ready(function() {
       };
 
    }
+
+
+
+
+
+
+   function getPeriodMaxMin(period_array) {
+
+      for (let i = 0; i < period_array.length; i++) {
+
+         temp = period_array[i].main.temp;
+         humidity = period_array[i].main.humidity;
+         wind = period_array[i].wind.speed;
+
+         if (i === 0) {
+            tempMax = temp;
+            tempMin = temp;
+            humidMax = humidity;
+            humidMin = humidity;
+            windMax = wind;
+            windMin = wind;
+            console.log("im in zero!");
+         };
+
+         // console.log("temp/humidity/wind:", temp, "/", humidity, "/", wind);
+         console.log("====================================");
+         console.log("temp/humidity/wind for index:", i, "is", temp, "/", humidity, "/", wind);
+   
+         // get max min temp
+         // console.log("Go check max/min - temp/tempMax/tempMin:", temp, "/", tempMax, "/", tempMin);         
+
+         if (temp > tempMax) {
+            tempMax = temp;
+            // console.log("Im in max!: ", temp, "/", tempMax, "/", tempMin);
+         } else if (temp < tempMin) {
+            tempMin = temp;
+            // console.log("Im in min!: ", temp, "/", tempMax, "/", tempMin);
+         };
+
+         // console.log("Now completed getPeriodMaxMin - temp/tempMax/tempMin:", temp, "/", tempMax, "/", tempMin);
+
+         if (humidity > humidMax) {
+            humidMax = humidity;
+            // console.log("Im in max!: ", humidity, "/", humidMax, "/", humidMin);
+         } else if (humidity < humidMin) {
+            humidMin = humidity;
+            // console.log("Im in min!: ", humidity, "/", humidMax, "/", humidMin);
+         };
+
+         if (wind > windMax) {
+            windMax = wind;
+            // console.log("Im in max!: ", wind, "/", windMax, "/", windMin);
+         } else if (wind < windMin) {
+            windMin = wind;
+            // console.log("Im in min!: ", wind, "/", windMax, "/", windMin);
+         }
+
+
+
+      };
+
+      console.log("Final max/min");
+      console.log("**************************");
+      console.log("temp:", tempMax, "/", tempMin);
+      console.log("humidity:", humidMax, "/", humidMin);
+      console.log("wind:", windMax, "/", windMin);
+
+
+   } // end of function getPeriodMaxMin()
 
 
 //--PW temperature, precipitation, pressure, wind, humidity, and cloudiness.
