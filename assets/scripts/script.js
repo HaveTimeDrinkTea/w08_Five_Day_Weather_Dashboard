@@ -45,7 +45,7 @@ $(document).ready(function() {
       });
    }
 
-   // getLocCorr(cityName);
+   getLocCorr(cityName);
 
 
 
@@ -69,6 +69,11 @@ $(document).ready(function() {
    function getDate(unixDate) {
       let dayString = dayjs(unixDate).format("DD-MMM-YYYY, HH:mm:ss");
       return dayString;
+   }
+
+   function getDateString(unixDate) {
+      let dateString = dayjs(unixDate).format("DD MMM");
+      return dateString;
    }
 
    function getTime(unixDate) {
@@ -240,7 +245,7 @@ $(document).ready(function() {
    let temp;
    var tempMax;
    var tempMin;
-   var humidity;
+   let humidity;
    var humidMax;
    var humidMin
    let wind;
@@ -261,17 +266,17 @@ $(document).ready(function() {
             res5DayArray = results;
             localStorage.setItem("res5DayArray", JSON.stringify(results));
             console.log("Weather Forecast:", res5DayArray);
-            // prep5DayData(res5DayArray) ;
-            // getPeriodMaxMin(day1Array);
-            // getPeriodMaxMin(day2Array);
-            // getPeriodMaxMin(day3Array);
-            // getPeriodMaxMin(day4Array);
-            // getPeriodMaxMin(day5Array);
+            prep5DayData(res5DayArray) ;
+            getPeriodMaxMin(day1Array);
+            getPeriodMaxMin(day2Array);
+            getPeriodMaxMin(day3Array);
+            getPeriodMaxMin(day4Array);
+            getPeriodMaxMin(day5Array);
          });
    }
 
-      res5DayArray = JSON.parse(localStorage.getItem("res5DayArray"));
-   prep5DayData(res5DayArray) ;
+   //    res5DayArray = JSON.parse(localStorage.getItem("res5DayArray"));
+   // prep5DayData(res5DayArray) ;
    // getPeriodMaxMin(day1Array);
    // getPeriodMaxMin(day2Array);
    // getPeriodMaxMin(day3Array);
@@ -340,11 +345,14 @@ $(document).ready(function() {
    //-- 4.2 Compute the Max and Min of each day in 5Day forecast 
 
    var dayCnt = 0;
+   let dateStringForecast;
 
    function getPeriodMaxMin(period_array) {
 
       for (let i = 0; i < period_array.length; i++) {
 
+         dateStringForecast = getDateString(period_array[i].dt * 1000);
+         console.log("dateStringForecast:", dateStringForecast);
          temp = period_array[i].main.temp;
          humidity = period_array[i].main.humidity;
          wind = period_array[i].wind.speed;
@@ -393,7 +401,6 @@ $(document).ready(function() {
          }
 
 
-
       };
 
       console.log("Final max/min");
@@ -406,6 +413,7 @@ $(document).ready(function() {
          fiveDayMaxMinArr = [
             {
                day : dayCnt,
+               date : dateStringForecast,
                tempMax: tempMax,
                tempMin: tempMin, 
                humidMax: humidMax,
@@ -418,6 +426,7 @@ $(document).ready(function() {
          fiveDayMaxMinArr.push(
             {
                day : dayCnt,
+               date : dateStringForecast,               
                tempMax: tempMax,
                tempMin: tempMin, 
                humidMax: humidMax,
@@ -430,6 +439,21 @@ $(document).ready(function() {
 
       dayCnt ++;
       console.log("fiveDayMaxMinArr:", fiveDayMaxMinArr);
+
+
+   //--------------------------------        
+   //-- 4.3 render 5 day forecast 
+      let dayNum;
+
+      for (let i = 0; i < fiveDayMaxMinArr.length; i++) {
+         dayNum = i +1;
+         $("#foreTitleDay" + dayNum).text(fiveDayMaxMinArr[i].date);
+         $("#foreTempDay" + dayNum).text(fiveDayMaxMinArr[i].tempMin + "°C to "+ fiveDayMaxMinArr[i].tempMax + "°C");
+         $("#foreHumidDay" + dayNum).text(fiveDayMaxMinArr[i].humidMin + "% to " + fiveDayMaxMinArr[i].humidMax + "%");
+         $("#foreWindDay" + dayNum).text(fiveDayMaxMinArr[i].windMin + "m/s to " + fiveDayMaxMinArr[i].windMax + "m/s" );
+         // $("#foreDay1SunRise").text(currSunRise + "H");
+         // $("#currSunSet").text(currSunSet + "H");
+      };
 
    } // end of function getPeriodMaxMin()
 
