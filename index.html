@@ -50,45 +50,41 @@
 
       </div>
    </header>
-   <main class="container-fluid main">
+   <main class="container-fluid main" id="main">
       <section>
       <div class="row">
          <!-- left column -->
          <div class="col-sm-12 col-md-6">
             <div class="row">
-               <table class="table table-sm table-borderless tableWeather">
+               <table class="table table-sm table-borderless tableWeather center" id ="currCityWeather">
                   <tbody>
                      <tr>
                         <td width="60%">
                            <h2 id="currCity"></h2> <br>
+                           <h3 id="currTemp"></h3> <br>
+                           <h4 id="currWeaFeels"></h4>
+                        </td>
+                        <td>
+                           <i id="weaIconMain" class="weaIconMain"></i> <br>
                            <h3 id="currWeaDesc"></h3></td>
-                        <td><i id="weaIconMain" class="weaIconMain"></i></td>
                      </tr>
                      <tr>
-                        <td id="currWeatherDetails" class="left" colspan="2">
-                           <table class="table table-sm table-borderless tableWeatherDetails">
+                        <td id="currWeatherDetails" colspan="2">
+                           <table class="table table-sm table-borderless tableWeatherDetails center">
                               <tr class="currWeather">
-                                 <td>Temperature</td>
-                                 <td><span id="currTemp"></span></td>
-                              </tr>
-                              <tr class="currWeather">
-                                 <td>Feels Like</td>
-                                 <td><span id="currFeelsLike"></span></td>
-                              </tr>
-                              <tr class="currWeather">
-                                 <td>Humidity</td>
+                                 <td><i class="fa fa-water"></i> Humidity</td>
                                  <td><span id="currHumid"></span></td>
                               </tr>
                               <tr class="currWeather">
-                                 <td>Wind</td>
+                                 <td><i class="fa fa-wind"></i> Wind</td>
                                  <td><span id="currWind"></span></td>
                               </tr>
                               <tr class="currWeather">
-                                 <td>Sun Rise</td>
+                                 <td><i class="fa fa-sun"></i> Sun Rise</td>
                                  <td><span id="currSunRise"></span></td>
                               </tr>
                               <tr class="currWeather">
-                                 <td>Sun Set</td>
+                                 <td><i class="fa fa-moon-o"></i> Sun Set</td>
                                  <td><span id="currSunSet"></span></td>
                               </tr>
                            </table>

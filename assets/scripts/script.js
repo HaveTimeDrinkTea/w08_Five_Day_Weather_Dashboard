@@ -132,10 +132,10 @@ $(document).ready(function() {
 
             let resWeather = JSON.parse(localStorage.getItem("resWeather"));
 
-            currTemp = resWeather.main.temp + "°C";
-            currHumid = resWeather.main.humidity + "%";
-            currWind = resWeather.wind.speed + "m/s";
-            currFeelsLike = resWeather.main.feels_like + "°C";
+            currTemp = parseFloat(resWeather.main.temp);
+            currHumid = resWeather.main.humidity;
+            currWind = resWeather.wind.speed;
+            currFeelsLike = resWeather.main.feels_like;
             currIconID = resWeather.weather[0].id;
             currIconDesc = resWeather.weather[0].description;
             currSunRise = getTime(resWeather.sys.sunrise * 1000);
@@ -165,12 +165,49 @@ $(document).ready(function() {
    $("#currWeaDesc").text(currIconDesc);
 
 
-   $("#currTemp").text(currTemp);
-   $("#currFeelsLike").text(currFeelsLike);
-   $("#currHumid").text(currHumid);
-   $("#currWind").text(currWind);
+   $("#currTemp").html("<i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Now: " + currTemp + "°C");
+   $("#currWeaFeels").html("<i class='fa fa-commenting' aria-hidden='true'></i> Feels like <br>" + currFeelsLike + "°C");
+   $("#currHumid").text(currHumid + "%");
+   $("#currWind").text(currWind + "m/s");
    $("#currSunRise").text(currSunRise + "H");
    $("#currSunSet").text(currSunSet + "H");
+
+   //-- set background colour based on temperature
+
+   let bgEl = $("#currCityWeather");
+
+   console.log("currTemp:", currTemp);
+
+   let currTemp1 = 18;
+   
+   if (currTemp1 >= 35) {
+      bgEl.addClass("hotExtreme");
+   } else if ((currTemp >= 32) && (currTemp < 35)) {
+      bgEl.addClass("hotVeryVery");
+   } else if ((currTemp >= 28) && (currTemp < 32)) {
+      bgEl.addClass("hotVery");
+   } else if ((currTemp >= 25 ) && (currTemp < 28)) {
+      bgEl.addClass("hotQuite");
+   } else if ((currTemp >= 20 ) && (currTemp < 25)) {
+      bgEl.addClass("warmYucky");
+   } else if ((currTemp >= 12 ) && (currTemp < 20)) {
+      bgEl.addClass("warmNice");
+   } else if ((currTemp >= 7 ) && (currTemp < 12)) {
+      bgEl.addClass("coolNice");
+   } else if ((currTemp >= 1 ) && (currTemp < 7)) {
+      bgEl.addClass("coolChilly");
+   } else if ((currTemp >= -5 ) && (currTemp < 1)) {
+      bgEl.addClass("coldCold");
+   } else if ((currTemp >= -10 ) && (currTemp < -5)) {
+      bgEl.addClass("coldVery");
+   } else if (currTemp < -10) {
+      bgEl.addClass("freezing");
+   } else {
+      bgEl.addClass("default");
+   };
+
+
+
 
    // let isUseCnt = true;
    let isUseCnt = false;

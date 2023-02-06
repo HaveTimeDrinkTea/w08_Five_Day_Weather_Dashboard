@@ -92,6 +92,11 @@ li:hover {
   /* max-height: 400px !important; */
 }
 
+.main {
+  background-color: var(--colorGreen);
+  /* max-height: 400px !important; */
+}
+
 .footer {
   background-color: var(--colorBrownMonkey);
   font-size: 1rem;
@@ -185,7 +190,14 @@ h3 {
   text-align: center;
 }
 
-h4, 
+h4 {
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--colorWhite);
+  text-transform: capitalize;
+  text-align: center;
+}
+ 
 h5, 
 h6 {
   font-size: 1rem;
@@ -240,7 +252,8 @@ button:active {
 }
 
 .center {
-  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -254,9 +267,9 @@ button:active {
 }
 
 .tableWeather {
-  border: 0 !important;
-  padding: 10px;
-
+  border: 0.3rem double var(--colorWhite) !important;
+  padding: 20px;
+  margin: 20px;
 }
 
 .tableWeatherDetails {
@@ -272,3 +285,61 @@ button:active {
   padding: 0px 20px;
   line-height: 1.5rem;
 }
+
+.hotExtreme {
+  background-color: var(--tempBrownDark);
+}
+
+.hotVeryVery {
+  background-color: var(--tempRed);
+}
+
+.hotVery {
+  background-color: var(--tempOrangeDark);
+}
+
+.hotQuite {
+  background-color: var(--tempOrange);
+}
+
+.warmYucky {
+  background-color: var(--tempOrangeLight);
+}
+
+.warmNice {
+  background-color: var(--tempYellow);
+}
+
+.coolNice {
+  background-color: var(--tempGreen);
+}
+
+.coolChilly {
+  background-color: var(--tempTurquoise);
+}
+
+.coldCold {
+  background-color: var(--tempBlueDark);
+}
+
+.coldVery {
+  background-color: var(--tempBlueLight);
+}
+
+.freezing {
+  background-color: var(--tempBlueLighter);
+}
+
+.default {
+  background-color: var(--colorTealDarker);
+}
+
+
+
+
+
+
+
+
+
+
