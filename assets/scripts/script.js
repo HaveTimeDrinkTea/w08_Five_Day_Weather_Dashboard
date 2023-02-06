@@ -34,7 +34,7 @@ $(document).ready(function() {
             // User input validation before getting weather data
 
             getWeather();
-            get5DayForecast();
+            // get5DayForecast();
 
 
       }).fail(function(e) {
@@ -45,7 +45,9 @@ $(document).ready(function() {
       });
    }
 
-   getLocCorr(cityName);
+   // getLocCorr(cityName);
+
+
 
 
    //--==============================================   
@@ -56,7 +58,8 @@ $(document).ready(function() {
    var nowMidnightEndUnix = dayjs(now.endOf("date")).valueOf();
    console.log("nowMidnight EOD:", nowMidnightEndUnix, "and that is actually:", dayjs(nowMidnightEndUnix).format("DD-MMM-YYYY HH:mm:ss"));
    var todayDateString = dayjs(now).format("DD-MMM-YYYY");
-  
+   var todayHour = parseInt(dayjs(now).format("HH"));
+
    // var todayDateUnix = dayjs("2023-02-04").unix();
    var todayDateUnix = dayjs(todayDateString).valueOf();
    // console.log("todayDate:", now);
@@ -67,11 +70,31 @@ $(document).ready(function() {
       let dayString = dayjs(unixDate).format("DD-MMM-YYYY, HH:mm:ss");
       return dayString;
    }
- 
+
+   function getTime(unixDate) {
+      let timeString = dayjs(unixDate).format("HH:mm");
+      return timeString;
+   }
+
 
    //--==============================================   
    //-- 3. Get current weather 
    //--==============================================   
+   
+   //--------------------------------        
+   //-- 3.1 Get current weather data
+
+   let currTemp;
+   let currHumid;
+   let currWind;
+   let currFeelsLike;
+   let currIconID;
+   let currIconDesc;
+   let currSunRise;
+   let currSunSet;
+
+
+
 
    function getWeather() {
       // Get the current weather data for a location
@@ -80,10 +103,74 @@ $(document).ready(function() {
       $.ajax({
          url: queryURL,
          method: "GET"
-         }).then(function(resWeather) {
-            console.log("resWeather:", resWeather);
+         }).then(function(resWeatherTemp) {
+            console.log("resWeather:", resWeatherTemp);
+
+            // localStorage.setItem("resWeather", JSON.stringify(resWeatherTemp));
+            // let resWeather = JSON.parse(localStorage.getItem("resWeather"));
+
+            // currTemp = resWeather.main.temp + "°C";
+            // currHumid = resWeather.main.humidity + "%";
+            // currWind = resWeather.wind.speed + "m/s";
+            // currFeelsLike = resWeather.main.feels_like + "°C";
+            // currIconID = resWeather.weather[0].id;
+            // currIconDesc = resWeather.weather[0].description;
+            // currSunRise = resWeather.sys.sunrise + " is " + getTime(resWeather.sys.sunrise * 1000);
+            // currSunSet = resWeather.sys.sunset + " is " + getTime(resWeather.sys.sunset * 1000);
+            // console.log("currTemp:", currTemp);
+            // console.log("currHumid:", currHumid);
+            // console.log("currWind:", currWind);
+            // console.log("currFeelsLike:", currFeelsLike);
+            // console.log("currIconID:", currIconID);
+            // console.log("currIconDesc:", currIconDesc);
+            // console.log("currSunRise:", currSunRise);
+            // console.log("currSunSet:", currSunSet);
          });
    }
+
+// all these should be inside the function ajax
+
+            let resWeather = JSON.parse(localStorage.getItem("resWeather"));
+
+            currTemp = resWeather.main.temp + "°C";
+            currHumid = resWeather.main.humidity + "%";
+            currWind = resWeather.wind.speed + "m/s";
+            currFeelsLike = resWeather.main.feels_like + "°C";
+            currIconID = resWeather.weather[0].id;
+            currIconDesc = resWeather.weather[0].description;
+            currSunRise = getTime(resWeather.sys.sunrise * 1000);
+            currSunSet =  getTime(resWeather.sys.sunset * 1000);
+            console.log("currTemp:", currTemp);
+            console.log("currHumid:", currHumid);
+            console.log("currWind:", currWind);
+            console.log("currFeelsLike:", currFeelsLike);
+            console.log("currIconID:", currIconID);
+            console.log("currIconDesc:", currIconDesc);
+            console.log("currSunSet is " + currSunRise);
+            console.log("currSunrise is " + currSunSet);
+
+
+   //--------------------------------        
+   //-- 3.2 Render current weather data
+
+   $("#currCity").text(cityName);
+
+   let iconDay = "-n";
+
+   if ((todayHour > 7) && (todayHour < 18) ) {
+      iconDay = "-d";
+   };
+   $("#weaIconMain").attr("class", "owf owf-"+ currIconID + iconDay +" owf-3x weaIconMain");
+
+   $("#currWeaDesc").text(currIconDesc);
+
+
+   $("#currTemp").text(currTemp);
+   $("#currFeelsLike").text(currFeelsLike);
+   $("#currHumid").text(currHumid);
+   $("#currWind").text(currWind);
+   $("#currSunRise").text(currSunRise + "H");
+   $("#currSunSet").text(currSunSet + "H");
 
    // let isUseCnt = true;
    let isUseCnt = false;
