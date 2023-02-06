@@ -34,7 +34,7 @@ $(document).ready(function() {
             // User input validation before getting weather data
 
             getWeather();
-            // get5DayForecast();
+            get5DayForecast();
 
 
       }).fail(function(e) {
@@ -106,7 +106,7 @@ $(document).ready(function() {
          }).then(function(resWeatherTemp) {
             console.log("resWeather:", resWeatherTemp);
 
-            // localStorage.setItem("resWeather", JSON.stringify(resWeatherTemp));
+            localStorage.setItem("resWeather", JSON.stringify(resWeatherTemp));
             // let resWeather = JSON.parse(localStorage.getItem("resWeather"));
 
             // currTemp = resWeather.main.temp + "°C";
@@ -178,9 +178,9 @@ $(document).ready(function() {
 
    console.log("currTemp:", currTemp);
 
-   let currTemp1 = 18;
+   // let currTemp1 = 18;
    
-   if (currTemp1 >= 35) {
+   if (currTemp >= 35) {
       bgEl.addClass("hotExtreme");
    } else if ((currTemp >= 32) && (currTemp < 35)) {
       bgEl.addClass("hotVeryVery");
@@ -259,15 +259,24 @@ $(document).ready(function() {
          method: "GET"
          }).then(function(results) {
             res5DayArray = results;
+            localStorage.setItem("res5DayArray", JSON.stringify(results));
             console.log("Weather Forecast:", res5DayArray);
-            prep5DayData(res5DayArray) ;
-            getPeriodMaxMin(day1Array);
-            getPeriodMaxMin(day2Array);
-            getPeriodMaxMin(day3Array);
-            getPeriodMaxMin(day4Array);
-            getPeriodMaxMin(day5Array);
+            // prep5DayData(res5DayArray) ;
+            // getPeriodMaxMin(day1Array);
+            // getPeriodMaxMin(day2Array);
+            // getPeriodMaxMin(day3Array);
+            // getPeriodMaxMin(day4Array);
+            // getPeriodMaxMin(day5Array);
          });
    }
+
+      res5DayArray = JSON.parse(localStorage.getItem("res5DayArray"));
+   prep5DayData(res5DayArray) ;
+   // getPeriodMaxMin(day1Array);
+   // getPeriodMaxMin(day2Array);
+   // getPeriodMaxMin(day3Array);
+   // getPeriodMaxMin(day4Array);
+   // getPeriodMaxMin(day5Array);
    
    
    //--------------------------------        
