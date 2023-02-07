@@ -34,7 +34,7 @@
    <link rel="stylesheet" href="assets/css/myfavcolours.css">
    <link rel="stylesheet" href="assets/css/styles_overall.css">
 
-   <title>Hello, world!</title>
+   <title>Weather App</title>
 </head>
 <body>
    <header class="container-fluid header">
@@ -42,16 +42,79 @@
          <div class="col-sm-12">
             <div class="jumbotron">
                <h1 class="display-4">Super Duper Weather App</h1>
-               <div class="searchBar">
+               <div id="searchBar">
                   <label for="userTextInput"></label>
                   <input type="text" id="userTextInput" name="userTextInput" placeholder="City Name">
                   <button id="search">&nbsp;&nbsp;<i class="fas fa-search-location">&nbsp;&nbsp;</i> </button> 
                   <div id="errMsg"></div>
                </div>
-
             </div>
          </div>
-
+      </div>
+      <div class="row searchBtnsRow">
+         <!-- filler 0 column -->    
+         <div class="col-sm-1">
+            &nbsp;
+         </div>         
+         <!-- button 1 -->      
+         <div class="col-sm-2">
+            <div class="card cardButtons" id="cardBtn1">
+               <div class="card-body card-body-btn">
+                  <button id="searchBtn1" class="searchBtns"> 
+                     <i class="fas fa-search-location"></i> <br>
+                     <span class="btnText" id="btn1"></span>
+                  </button>
+               </div>
+            </div>
+         </div>
+         <!-- button 2 -->      
+         <div class="col-sm-2">
+            <div class="card cardButtons" id="cardBtn2">
+               <div class="card-body card-body-btn">
+                  <button id="searchBtn2" class="searchBtns"> 
+                     <i class="fas fa-search-location"></i> <br>
+                     <span class="btnText" id="btn2"></span>
+                  </button>
+               </div>
+            </div>
+         </div>
+         <!-- button 3 -->      
+         <div class="col-sm-2">
+            <div class="card cardButtons" id="cardBtn3">
+               <div class="card-body card-body-btn">
+                  <button id="searchBtn3" class="searchBtns"> 
+                     <i class="fas fa-search-location"></i> <br>
+                     <span class="btnText" id="btn3"></span>
+                  </button>
+               </div>
+            </div>
+         </div>
+         <!-- button 4 -->      
+         <div class="col-sm-2">
+            <div class="card cardButtons" id="cardBtn4">
+               <div class="card-body card-body-btn">
+                  <button id="searchBtn4" class="searchBtns"> 
+                     <i class="fas fa-search-location"></i> <br>
+                     <span class="btnText" id="btn4"></span>
+                  </button>
+               </div>
+            </div>
+         </div>
+         <!-- button 5 -->      
+         <div class="col-sm-2">
+            <div class="card cardButtons" id="cardBtn5">
+               <div class="card-body card-body-btn">
+                  <button id="searchBtn5" class="searchBtns"> 
+                     <i class="fas fa-search-location"></i> <br>
+                     <span class="btnText" id="btn5"></span>
+                  </button>
+               </div>
+            </div>
+         </div>
+         <!-- filler last column -->    
+         <div class="col-sm-1">
+            &nbsp;
+         </div>                             
       </div>
    </header>
    <main class="container-fluid main" id="main">
