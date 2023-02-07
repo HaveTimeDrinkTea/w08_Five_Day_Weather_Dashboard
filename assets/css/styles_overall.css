@@ -181,27 +181,59 @@ h1 {
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: 4rem;
   text-align: center;
   color: var(--colorWhite);
   text-transform: capitalize;
   text-align: center;
+  padding-top: 8rem;
+}
+
+.h2Fore {
+  font-size: 3rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  width: 80%;
+  text-align: center;
+  margin: 2rem auto;
+  border: 0.3rem solid var(--colorWhite);
+  background-color: var(--colorPink);
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: 2.3em;
   text-align: center;
   color: var(--colorWhite);
   text-transform: capitalize;
   text-align: center;
 }
 
+
+.h3Top {
+  padding-top: 2rem;
+}
+
+.h3Middle {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+}
+
+.h3Bottom {
+  padding-bottom: 2rem;
+}
+
 h4 {
-  font-size: 1.3rem;
+  font-size: 1.7rem;
   text-align: center;
   color: var(--colorWhite);
   text-transform: capitalize;
   text-align: center;
+}
+
+.h4IconDesc {
+  padding-top: 1rem;
+
 }
 
 h5, 
@@ -318,9 +350,10 @@ button:active {
 /* Weather Icons */
 
 .weaIconMain {
-  font-size: 7rem;
+  font-size: 9rem;
+  padding-top: 6rem;
   color: var(--colorWhite);
-  text-align: left;
+  text-align: center;
 }
 
 .weaIconFore {
@@ -333,6 +366,11 @@ button:active {
   border: 0.3rem double var(--colorWhite) !important;
   padding: 20px;
   margin: 20px;
+}
+
+.currWeatherRow {
+  padding-top: 5rem;
+
 }
 
 .tableWeatherDetails {

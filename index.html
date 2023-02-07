@@ -44,7 +44,7 @@
                <h1 class="display-4">Super Duper Weather App</h1>
                <div id="searchBar">
                   <label for="userTextInput"></label>
-                  <input type="text" id="userTextInput" name="userTextInput" placeholder="City Name">
+                  <input type="text" id="userTextInput" name="userTextInput" placeholder="Search for a City">
                   <button id="search">&nbsp;&nbsp;<i class="fas fa-search-location">&nbsp;&nbsp;</i> </button> 
                   <div id="errMsg"></div>
                </div>
@@ -122,41 +122,26 @@
       <div class="row">
          <div class="col-sm-12">
             <div class="row">
-               <table class="table table-sm table-borderless tableWeather center" id ="currCityWeather">
+               <table class="table table-sm table-borderless tableWeather center" id="currCityWeather">
                   <tbody>
                      <tr>
-                        <td width="60%">
+                        <td width="33%" class="currWeatherRow">
                            <h2 id="currCity"></h2> <br>
-                           <h3 id="currDateTime"></h3> <br>
-                           <h3 id="currTemp"></h3> <br>
-                           <h4 id="currWeaFeels"></h4>
+                           <h4 id="currDateTime" class="h4IconDesc"></h4>></h4> <br>
                         </td>
-                        <td>
+                        <td width="33%" class="currWeatherRow">
+                           <h3 id="currTemp" class="h3Top"></h3> <br>
+                           <h3 id="currWeaFeels" class="h3Middle"></h3>
+                           <h3 class="h3Middle"><i class="fa fa-water"></i> Humidity <span id="currHumid"></span></h3>
+                           <h3 class="h3Middle"><i class="fa fa-wind"></i> Wind <span id="currWind"></span></h3>
+                           <h3 class="h3Middle"><i class="fa fa-sun"></i> Sun Rise <span id="currSunRise"></span></h4>
+                           <h3 class="h3Bottom"><i class="fa fa-moon-o"></i> Sun Set <span id="currSunSet"></span></h3>
+                        </td>
+                        <td  class="currWeatherRow">
                            <i id="weaIconMain" class="weaIconMain"></i> <br>
-                           <h3 id="currWeaDesc"></h3></td>
+                           <h4 id="currWeaDesc" class="h4IconDesc"></h4></td>
                      </tr>
-                     <tr>
-                        <td id="currWeatherDetails" colspan="2">
-                           <table class="table table-sm table-borderless tableWeatherDetails center">
-                              <tr class="currWeather">
-                                 <td><i class="fa fa-water"></i> Humidity</td>
-                                 <td><span id="currHumid"></span></td>
-                              </tr>
-                              <tr class="currWeather">
-                                 <td><i class="fa fa-wind"></i> Wind</td>
-                                 <td><span id="currWind"></span></td>
-                              </tr>
-                              <tr class="currWeather">
-                                 <td><i class="fa fa-sun"></i> Sun Rise</td>
-                                 <td><span id="currSunRise"></span></td>
-                              </tr>
-                              <tr class="currWeather">
-                                 <td><i class="fa fa-moon-o"></i> Sun Set</td>
-                                 <td><span id="currSunSet"></span></td>
-                              </tr>
-                           </table>
-                        </td>
-                     </tr>                     
+                  
                   </tbody>
                </table>
             </div>   
@@ -165,7 +150,7 @@
 <!-- 5-day forecast -->
       <div class="row"> 
          <div class="col-sm-12">
-            <h2>Five Day Forecast</h2>
+            <h2 class="h2Fore">Five-Day Forecast</h2>
             <div class="container">
                <div class="row">
                   <!-- Day 0 column -->    
