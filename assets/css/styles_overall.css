@@ -113,6 +113,10 @@ li:hover {
 
 }
 
+#errMsg {
+  font-size: 1.2rem;
+  color: var(--colorRed);
+}
 
 header::after,
 footer::after {
@@ -204,35 +208,66 @@ h6 {
   text-align: center;
 }
 
+/* forms */
+
+input {
+  width: 50%;
+  font-size: 1.4rem !important;
+  color: var(--colorWhite);
+  padding: 1rem;
+  margin: 1rem;
+  vertical-align: middle;
+  border: 0.3rem solid var(--colorWhite);
+  box-sizing: border-box;
+  background-color: var(--colorOrange);
+  border-radius: 5px;
+  /* box-shadow: 5px 5px var(--colorCharcoal); */
+}
+
+input[type=text]:focus {
+  background-color: var(--colorMustard);
+  font-size: 1.4rem;
+}
+
+::placeholder {
+  color: var(--colorWhite);
+  font-size: 1.4rem;
+}
 
 /* buttons */
+
+/* .searchBar{
+  vertical-align: bottom;
+} */
+
 button {
-  display: inline-block;
-  padding: 10px;
-  margin: 10px;
-  font-size: 2rem;
+  display: inline;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  vertical-align: middle;
+  font-size: 1.7rem;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   outline: auto;
   color: var(--colorWhite);
   background-color: var(--colorGreen);
-  border: solid 1px var(--colorWhite);
+  border: solid 0.2rem var(--colorWhite);
   border-radius: 5px;
-  box-shadow: 5px 5px var(--colorCharcoal);
+  box-shadow: 0.3rem 0.3rem var(--colorCharcoal);
 }
 
 button:hover, 
 button:visited {
   background-color: var(--colorRed);
-  box-shadow: 5px 5px var(--colorWheat);
+  box-shadow: 0.3rem 0.3rem  var(--colorWheat);
   color: var(--colorWhite);
 }
 
 button:active {
   background-color: var(--colorRed);
-  box-shadow: 5px 5px var(--colorWheat);
-  transform: translateY(4px);
+  box-shadow: 0.3rem 0.3rem  var(--colorWheat);
+  transform: translateY(0.4rem);
   color: var(--fontVintage);
 }
 
@@ -339,7 +374,6 @@ button:active {
 /* forecast cards */
 
 .card {
-  background-color: var(--colorGreen) !important;
   border: 0.2rem solid var(--colorWhite) !important;
   padding: 0px;
   margin: 0;
