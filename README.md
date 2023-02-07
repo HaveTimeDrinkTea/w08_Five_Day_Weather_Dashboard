@@ -91,16 +91,19 @@ Screen dump of the deployed webpage:
 
 ![Deployed Webpage](assets/images/weatherdashboard2.png)
 
-### Weather App for a predefined city (Singapore)
 ![Deployed Webpage](assets/images/weatherdashboard3.png)
 
+
+
+### Weather App for a predefined city (Singapore)
 ![Deployed Webpage](assets/images/weatherdashboard4.png)
 
-### Weather App for searching a city
-![Deployed Webpage](assets/images/weatherdashboard3.png)
+![Deployed Webpage](assets/images/weatherdashboard5.png)
+
+
 
 ### error user input treatment
-![Deployed Webpage](assets/images/Wweatherdashboard6.png)
+![Deployed Webpage](assets/images/weatherdashboard6.png)
 
 
 
