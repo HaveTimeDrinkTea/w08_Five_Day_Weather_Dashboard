@@ -25,13 +25,13 @@ $(document).ready(function() {
 
    function init() {
       queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/weather?q=london&appid=" + APIKey;
-      console.log(queryUrlGetLoc);
+
       //get the coordinates of city based on user input.
       $.ajax({
          url: queryUrlGetLoc,
          method: "GET"
          }).then(function(resLocation) {
-            console.log("resLocation here:", resLocation);
+
             locCorr.lat = resLocation.coord.lat;
             locCorr.lon = resLocation.coord.lon;
             cityName = resLocation.name;
@@ -49,7 +49,6 @@ $(document).ready(function() {
    function setSearchArray() {
       searchBtnStoredArr = JSON.parse(localStorage.getItem("searchBtnArr"));
 
-      console.log("searchBtnStoredArr", searchBtnStoredArr);
       if (!(searchBtnStoredArr)) {
          searchBtnDefaultArr = [
             "singapore",
@@ -66,27 +65,18 @@ $(document).ready(function() {
 
    searchBtnStoredArr = JSON.parse(localStorage.getItem("searchBtnArr"));
 
-   console.log("searchBtnStoredArr", searchBtnStoredArr);
-
-
-
-   console.log("searchBtnStoredArr here", searchBtnStoredArr);
 
    //--==============================================   
    //-- 1. Get current day 
    //--==============================================   
    var now = dayjs();
-   var nowMidnightStartUnix = dayjs(now.startOf("date")).valueOf();
-   // var nowMidnightEndUnix = dayjs(now.endOf("date")).valueOf();
-   // console.log("nowMidnight EOD:", nowMidnightEndUnix, "and that is actually:", dayjs(nowMidnightEndUnix).format("DD-MMM-YYYY HH:mm:ss"));
-   var todayDateString = dayjs(now).format("DD-MMM-YYYY");
-   var todayHour = parseInt(dayjs(now).format("HH"));
+   // var nowMidnightStartUnix = dayjs(now.startOf("date")).valueOf();
 
-   // var todayDateUnix = dayjs("2023-02-04").unix();
-   var todayDateUnix = dayjs(todayDateString).valueOf();
-   // console.log("todayDate:", now);
-   console.log("todayDateString:", todayDateString);
-   console.log("todayDateUnix:", todayDateUnix, "and that is actually:", dayjs(todayDateUnix).format("DD-MMM-YYYY"));
+   var todayDateString = dayjs(now).format("DD-MMM-YYYY");
+   // var todayHour = parseInt(dayjs(now).format("HH"));
+
+
+   // var todayDateUnix = dayjs(todayDateString).valueOf();
 
    function getDate(unixDate, timeZone) {
       let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HH:mm:ss");
@@ -94,7 +84,7 @@ $(document).ready(function() {
    }
 
    function getDateTime(unixDate, timeZone) {
-      let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HHmm") + "H";
+      let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HHmm") + "h";
       return dayString;
    }
 
@@ -108,7 +98,10 @@ $(document).ready(function() {
       return timeString;
    }
 
-
+   function getDateTimeFormat(unixDate, timeZone, format) {
+      let timeString = dayjs((unixDate + timeZone) * 1000).format(format);
+      return timeString;
+   }
 
 
 
@@ -126,7 +119,7 @@ $(document).ready(function() {
          url: queryUrlGetLoc,
          method: "GET"
          }).then(function(resLocation) {
-            console.log("resLocation:", resLocation);
+
             locCorr.lat = resLocation.coord.lat;
             locCorr.lon = resLocation.coord.lon;
 
@@ -137,20 +130,22 @@ $(document).ready(function() {
 
 
       }).fail(function(e) {
-         console.log("error is:", e)
-         console.log("response:", e.responseJSON);
+         // console.log("error is:", e)
+         // console.log("response:", e.responseJSON);
          $("#errMsg").html("<i class='fa fa-exclamation-triangle' aria-hidden='true'></i> <i class='fa fa-hand-paper-o' aria-hidden='true'></i> City does not exist. Please try again.");
          isError = true;
-         console.log("here:", isError);
+
       })
       .then(function(){
-         console.log("here check error:", isError);
+
          if (isError === false) {
             searchBtnStoredArr = JSON.parse(localStorage.getItem("searchBtnArr"));
-            searchBtnStoredArr.pop();
-            searchBtnStoredArr.unshift(cityName);
-            localStorage.setItem("searchBtnArr",JSON.stringify(searchBtnStoredArr));
-            renderSearchButtons();
+            if (!(searchBtnStoredArr.includes(cityName))) {
+               searchBtnStoredArr.pop();
+               searchBtnStoredArr.unshift(cityName);
+               localStorage.setItem("searchBtnArr",JSON.stringify(searchBtnStoredArr));
+               renderSearchButtons();
+            };
          };
          isError = false;
       })
@@ -168,9 +163,10 @@ $(document).ready(function() {
 
 
    searchBtnEl.on("click", function() {
+
       $("#errMsg").empty();
+
       cityName = (userInputEl.val().trim()).toLowerCase();
-      console.log("user input city:", cityName);
       
       if (cityName === null) {
          cityName = "london"; 
@@ -196,7 +192,7 @@ $(document).ready(function() {
                url: queryUrlGetLoc,
                method: "GET"
                }).then(function(resLocation) {
-                  console.log("resLocation:", resLocation);
+
                   locCorr.lat = resLocation.coord.lat;
                   locCorr.lon = resLocation.coord.lon;
       
@@ -212,17 +208,13 @@ $(document).ready(function() {
    renderSearchButtons();
 
 
-
-
-
-
    //--==============================================   
    //-- 3. Get current weather 
    //--==============================================   
    
    //--------------------------------        
    //-- 3.1 Get current weather data
-  
+
    let currTemp;
    let currHumid;
    let currWind;
@@ -250,11 +242,11 @@ $(document).ready(function() {
          bgColorClass = "warmYucky";
       } else if ((temp >= 12 ) && (temp < 20)) {
          bgColorClass = "warmNice";
-      } else if ((temp >= 5 ) && (temp < 12)) {
+      } else if ((temp >= 10 ) && (temp < 12)) {
          bgColorClass = "coolNice";
-      } else if ((temp >= 1 ) && (temp < 5)) {
+      } else if ((temp >= 5 ) && (temp < 10)) {
          bgColorClass = "coolChilly";
-      } else if ((temp >= -5 ) && (temp < 1)) {
+      } else if ((temp >= -5 ) && (temp < 5)) {
          bgColorClass = "coldCold";
       } else if ((temp >= -10 ) && (temp < -5)) {
          bgColorClass = "coldVery";
@@ -266,7 +258,7 @@ $(document).ready(function() {
       return bgColorClass;
    }
 
-
+   let currHourLocalTime; 
 
    function getWeather() {
       // Get the current weather data for a location
@@ -276,8 +268,6 @@ $(document).ready(function() {
          url: queryURL,
          method: "GET"
          }).then(function(resWeather) {
-
-            console.log("resWeather:", resWeather);
 
             currTemp = resWeather.main.temp;
             currHumid = resWeather.main.humidity;
@@ -294,15 +284,14 @@ $(document).ready(function() {
             //-- 3.2 Render current weather data
 
             $("#currCity").text(cityName);
-            console.log("dayjs()", dayjs(now).valueOf());
-            console.log("timeZone:", timeZone);
-            console.log("current date and time:", getDateTime(dayjs(now).valueOf() / 1000, timeZone));
 
-            $("#currDateTime").text(getDateTime(dayjs(now).valueOf() / 1000, timeZone));
+            $("#currDateTime").text(getDateTime(dayjs().valueOf() / 1000, timeZone));
 
             let iconDay = "-n";
 
-            if ((todayHour > 7) && (todayHour < 18) ) {
+            currHourLocalTime = parseInt(getDateTimeFormat(dayjs().valueOf() /1000, timeZone, "H"));
+
+            if ((currHourLocalTime > 7) && (currHourLocalTime < 17) ) {
                iconDay = "-d";
             };
             $("#weaIconMain").attr("class", "owf owf-"+ currIconID + iconDay +" owf-3x weaIconMain");
@@ -360,7 +349,6 @@ $(document).ready(function() {
          method: "GET"
          }).then(function(results) {
             res5DayArray = results;
-            console.log("Weather Forecast:", results);
 
          //--------------------------------        
          //-- 4.1 Put Each day in 5Day Forecast in own array
@@ -369,56 +357,42 @@ $(document).ready(function() {
 
          function prep5DayData(results) {
 
-
-            console.log("res5DayArray.list.length:", results.list.length);
-
             forecastTimeZone = results.city.timezone;
             let nowLocal = dayjs().valueOf() + forecastTimeZone;
-            console.log("nowLocal", nowLocal, " is ", dayjs(nowLocal).format("DD-MMM-YYYY HH:mm"));
+
             var foreCastMidnightStartUnix = dayjs(dayjs(nowLocal).startOf("date")).valueOf();
 
             for (let i = 0; i < results.list.length; i++) {
 
-               let arrayDateUnix = (results.list[i].dt * 1000) + forecastTimeZone;
-
-               console.log("forecastTimeZone", forecastTimeZone);
-               console.log("arrayDateUnix", arrayDateUnix, " is ", dayjs(arrayDateUnix).format("DD-MMM-YYYY HH:mm"));
-
-               console.log("foreCastMidnightStartUnix", foreCastMidnightStartUnix, " is ", dayjs(foreCastMidnightStartUnix).format("DD-MMM-YYYY HH:mm"));              
+               let arrayDateUnix = (results.list[i].dt * 1000) + forecastTimeZone;            
 
                dayDiff = dayjs(arrayDateUnix).diff(foreCastMidnightStartUnix, "day");
 
-               console.log(i, ": for", getDate(arrayDateUnix, 0), ", the diff is:", dayDiff);
+               // console.log(i, ": for", getDate(arrayDateUnix, 0), ", the diff is:", dayDiff);
 
                switch(dayDiff) {
                   case 1:
                      // code block
                      day1Array.push(results.list[i]);
-                     console.log("day1Array:", day1Array);
                      break;
                   case 2:
                      // code block
                      day2Array.push(results.list[i]);
-                     console.log("day2Array:", day2Array);
                      break;
                   case 3:
                      // code block
                      day3Array.push(results.list[i]);
-                     console.log("day3Array:", day3Array);
                      break;
                   case 4:
                      // code block
                      day4Array.push(results.list[i]);
-                     console.log("day4Array:", day4Array);
                      break;
                   case 5:
                      // code block
                      day5Array.push(results.list[i]); 
-                     console.log("day5Array:", day5Array);
                      break;   
                   default:
                      day0Array.push(results.list[i]); 
-                     console.log("day0Array:", day0Array);
                };
 
             };
@@ -445,11 +419,25 @@ $(document).ready(function() {
             let wind;
             var windMax;
             var windMin;
+            let iconDesc;
+            let iconID;
+            let nowLocalHour
 
             for (let i = 0; i < period_array.length; i++) {
 
                dateStringForecast = getDateString(period_array[i].dt, forecastTimeZone);
-               console.log("dateStringForecast:", dateStringForecast);
+
+               nowLocalHour = parseInt(getDateTimeFormat(dayjs().valueOf(), forecastTimeZone, "H"));
+
+               let localReadingHour = parseInt(getDateTimeFormat(period_array[i].dt, forecastTimeZone, "H"));
+
+
+               if ((nowLocalHour >= localReadingHour) && (nowLocalHour <= localReadingHour +3)) {
+
+                  iconDesc = period_array[i].weather[0].description;
+                  iconID = period_array[i].weather[0].id;
+               };
+
                temp = period_array[i].main.temp;
                humidity = period_array[i].main.humidity;
                wind = period_array[i].wind.speed;
@@ -461,11 +449,7 @@ $(document).ready(function() {
                   humidMin = humidity;
                   windMax = wind;
                   windMin = wind;
-                  console.log("im in zero!");
-               };
-
-               console.log("====================================");
-               console.log("temp/humidity/wind for index:", i, "is", temp, "/", humidity, "/", wind);     
+               };  
 
                if (temp > tempMax) {
                   tempMax = temp;
@@ -487,12 +471,6 @@ $(document).ready(function() {
                //-- end of for loop
             };
 
-            console.log("Final max/min");
-            console.log("**************************");
-            console.log("temp:", tempMax, "/", tempMin);
-            console.log("humidity:", humidMax, "/", humidMin);
-            console.log("wind:", windMax, "/", windMin);
-
             avgTemp = ((tempMax + tempMin)/2);
 
             if (dayCnt === 0) {
@@ -500,6 +478,8 @@ $(document).ready(function() {
                   {
                      day : dayCnt,
                      date : dateStringForecast,
+                     iconDesc: iconDesc,
+                     iconID: iconID,
                      avgTemp: avgTemp.toFixed(1),
                      tempMax: tempMax,
                      tempMin: tempMin, 
@@ -513,7 +493,9 @@ $(document).ready(function() {
                fiveDayMaxMinArr.push(
                   {
                      day : dayCnt,
-                     date : dateStringForecast,     
+                     date : dateStringForecast,   
+                     iconDesc: iconDesc,
+                     iconID: iconID,
                      avgTemp: avgTemp.toFixed(1),          
                      tempMax: tempMax,
                      tempMin: tempMin, 
@@ -526,7 +508,7 @@ $(document).ready(function() {
             };
 
             dayCnt ++;
-            console.log("fiveDayMaxMinArr:", fiveDayMaxMinArr);
+            // console.log("fiveDayMaxMinArr:", fiveDayMaxMinArr);
 
 
          //--------------------------------        
@@ -536,6 +518,18 @@ $(document).ready(function() {
             for (let i = 0; i < fiveDayMaxMinArr.length; i++) {
                dayNum = i +1;
                $("#foreTitleDay" + dayNum).text(fiveDayMaxMinArr[i].date);
+
+               let iconForeDay = "-n";
+
+               if ((nowLocalHour > 7) && (nowLocalHour < 17) ) {
+                  iconForeDay = "-d";
+               };
+
+               $("#foreIconDay" + dayNum).attr("class", "owf owf-"+ fiveDayMaxMinArr[i].iconID + iconForeDay +" owf-2x weaIconFore");
+
+
+               $("#foreDescDay" + dayNum).text(fiveDayMaxMinArr[i].iconDesc);
+
                $("#foreTempDay" + dayNum).html(fiveDayMaxMinArr[i].tempMin + "°C <br> to <br>"+ fiveDayMaxMinArr[i].tempMax + "°C");
                $("#foreHumidDay" + dayNum).html(fiveDayMaxMinArr[i].humidMin + "% <br> to <br>" + fiveDayMaxMinArr[i].humidMax + "%");
                $("#foreWindDay" + dayNum).html(fiveDayMaxMinArr[i].windMin + " m/s <br> to <br>" + fiveDayMaxMinArr[i].windMax + " m/s" );
@@ -551,19 +545,23 @@ $(document).ready(function() {
             getPeriodMaxMin(day3Array);
             getPeriodMaxMin(day4Array);
             getPeriodMaxMin(day5Array);
+
+
+            if (fiveDayMaxMinArr[4].iconID === null) {
+               fiveDayMaxMinArr[4].iconID = fiveDayMaxMinArr[3].iconID;
+            };
+            
+            if (fiveDayMaxMinArr[4].iconDesc === null) {
+               fiveDayMaxMinArr[4].iconDesc = fiveDayMaxMinArr[3].iconDesc;
+            };            
          });
+         // end of function 5dayforecast()
    }
 
    
 })
 }
 init();   
-   
-
-
-
-
-//--PW temperature, precipitation, pressure, wind, humidity, and cloudiness.
 
 
    //--====================== 
