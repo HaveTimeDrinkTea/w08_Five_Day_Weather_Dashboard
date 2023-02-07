@@ -2,17 +2,14 @@
 
 ## Description
 
-This project is part of the Frontend Dev Bootcamp course challenge for the seventh week "Third-Party APIs". 
+This project is part of the Frontend Dev Bootcamp course challenge for the eighth week "Server APIs". 
 
-It requires us to use third-party APIs such as moment.js, JQuery and its UI together JScript objects, client-side storage, browser events to build a single day schedule planner. This calendar application should allow a user to save events for each hour of the day. This app will run in the browser and feature dynamically updated HTML and CSS powered by jQuery. Moment.js library is used for date and time display and manipulations. 
+It requires us to use server APIs such as openweather and third-party APIs like day.js, JQuery and its UI together JScript objects, client-side storage, browser events to build a Weather app. This weather application should allow a user to view the current weather of a city and its five-day forecast. This app should also allow user to check for the weather of any city provided by openweather. 
 
-The JScript will produce the output dyanmically to the webpage pages as part of the starter code provided. I've tried to group repeatedly called JScript codes into modular functions where possible.
+The JScript and JQuery will produce the output dyanmically to the webpage pages as part of the starter code provided. I've tried to group repeatedly called JScript codes into modular functions where possible.
 
 ### NOTE:
- * To make it easier to evaluate this application, I have added two buttons at the bottom of the deployed page.  
-   * One button will populate the hourly slots with mock activities (to remove the mock data, please delete the localStorage of key "userEntryArray" and then refresh the page) and 
-   * the other will set the current hour to be 12 noon so that one can see the past/present/future hourly slot colouring. (to reset back to local machine time, please click the button again).
- * The "Delete Yesterday Data" button on the side bar is meant to demonstrate the deletion of data.  The mock data mentioned above has some previous day data pre-populated for testing this function.  
+ * That for some reason(s) unknown, the text "testing" is actually a valid city according to openweather API. 
    
 
 
@@ -39,25 +36,33 @@ The JScript will produce the output dyanmically to the webpage pages as part of 
 
 ## User Story
 
-AS AN employee with a busy schedule
+AS A traveler
 
-I WANT to add important events to a daily planner
+I WANT to see the weather outlook for multiple cities
 
-SO THAT I can manage my time effectively
+SO THAT I can plan a trip accordingly
 
-[Deployment link](https://havetimedrinktea.github.io/w07_Work_Day_Scheduler/)
+
+[Deployment link](https://havetimedrinktea.github.io/w07_Five_Day_Weather_Dashboard/)
 
 
 ## Acceptance Criteria
 
-The app should:
-
-* Display the current day at the top of the calender when a user opens the planner.
-* Present timeblocks for standard business hours when the user scrolls down.
-* Color-code each timeblock based on past, present, and future when the timeblock is viewed.
-* Allow a user to enter an event when they click a timeblock
-* Save the event in local storage when the save button is clicked in that timeblock.
-* Persist events between refreshes of a page
+The app should should act as a weather dashboard with form inputs.
+* When a user searches for a city they are presented with current and future conditions for that city and that city is added to the search history
+* When a user views the current weather conditions for that city they are presented with:
+  * The city name
+  * The date
+  * An icon representation of weather conditions
+  * The temperature
+  * The humidity
+  * The wind speed
+* When a user view future weather conditions for that city they are presented with a 5-day forecast that displays:
+  * The date
+  * An icon representation of weather conditions
+  * The temperature
+  * The humidity
+* When a user click on a city in the search history they are again presented with current and future conditions for that city
 
 
 
