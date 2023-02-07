@@ -14,14 +14,22 @@ The JScript and JQuery will produce the output dyanmically to the webpage pages 
 
 
 ### Methodology: Pseudo Code
-
+* Get the OpenWeather APIs for getting the coordinates of a city, for the current weather conditions and the five-day weather forecast.
+* On page load, render the weather details for a default city (london)
+* Create a predefined list of cities to act as "search history" on page load.
+  * When a user search for a city, check that it is not already one of the search buttons.
+  * If it is not, then discard one of the predefined buttons and add the current user search as search history.
+  * This predefined list of cities and the user search history is stored in localStorage.
+* Use days.js for date/time conversion. All date/time are read as Unix timestamps and with the UTC time zone offset data provided by OpenWeather, the date/time are comverted to local time.
+* render the night and day version of weather icons based on the current local time.
+* render different background colours based on current temperature for the current weather or the average temperature for each of the 5-Day forecast.
   
 
 ### Further Improvements
 
 * Allow search by postcodes/zip code.
 * Allow user input predictive typing using a Google Map API
-* Render a royalty-free picture (as background image) of the searched city/location
+* Render a royalty-free picture (as background image) of the searched city/location.
 
 
 
@@ -75,19 +83,21 @@ N.A.
 
 Screen dump of the deployed webpage:
 
-### Web Schedule Planner
+### Weather App for Default city of London
 ![Deployed Webpage](assets/images/weatherdashboard.png)
 
-
-
-### User Entry in Current Hour Time Slot / Colour-coded time slots and multiply entries per time slot
 ![Deployed Webpage](assets/images/weatherdashboard2.png)
 
+### Weather App for a predefined city (Singapore)
+![Deployed Webpage](assets/images/weatherdashboard3.png)
 
-### null User entry and error message
-![Deployed Webpage](assets/images/Wweatherdashboard3.png)
+![Deployed Webpage](assets/images/weatherdashboard4.png)
 
+### Weather App for searching a city
+![Deployed Webpage](assets/images/weatherdashboard3.png)
 
+### error user input treatment
+![Deployed Webpage](assets/images/Wweatherdashboard6.png)
 
 
 
@@ -108,8 +118,20 @@ MIT License
 ## Features
 
 ### Main Features
-
-
-
+* On page load:
+  * show the weather of default city (London) at the current time. 
+  * show the 5-day forecast for the default city.
+  * show a list of 5 predefined city buttons for easy searching. 
+  * when user search for a city, the 5 predefined buttons will include the search history.
+* The current weather is presented in local time zone and the weather icons will indicate a day and night version where available.
+* The 5-day forecast weather shows 
+  * the max and min of temperature, humdity and wind speed for the day.
+  * the weather icon and description is based on the current local time and the weather forecase for the same time (within a 3hour slot) in the future.
+  
 ### Extra Features
+* The rendering of the weather data is against a background colour based on the temperature
+* The rendering of weather icon is based on re-designed icons courtesy of owfont (see #Credits).
+
+
+
 
