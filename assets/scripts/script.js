@@ -93,6 +93,11 @@ $(document).ready(function() {
       return dayString;
    }
 
+   function getDateTime(unixDate, timeZone) {
+      let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HHmm") + "H";
+      return dayString;
+   }
+
    function getDateString(unixDate, timeZone) {
       let dateString = dayjs((unixDate + timeZone) * 1000).format("DD MMM");
       return dateString;
@@ -173,9 +178,6 @@ $(document).ready(function() {
 
       getLocCorr(cityName);
       userInputEl.val("");
-
-
-
    });
    
    //--------------------------------        
@@ -292,6 +294,11 @@ $(document).ready(function() {
             //-- 3.2 Render current weather data
 
             $("#currCity").text(cityName);
+            console.log("dayjs()", dayjs(now).valueOf());
+            console.log("timeZone:", timeZone);
+            console.log("current date and time:", getDateTime(dayjs(now).valueOf() / 1000, timeZone));
+
+            $("#currDateTime").text(getDateTime(dayjs(now).valueOf() / 1000, timeZone));
 
             let iconDay = "-n";
 
@@ -303,7 +310,7 @@ $(document).ready(function() {
             $("#currWeaDesc").text(currIconDesc);
 
 
-            $("#currTemp").html("<i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Now: " + currTemp + "°C");
+            $("#currTemp").html("<i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> " + currTemp + "°C");
             $("#currWeaFeels").html("<i class='fa fa-commenting' aria-hidden='true'></i> Feels like <br>" + currFeelsLike + "°C");
             $("#currHumid").text(currHumid + "%");
             $("#currWind").text(currWind + "m/s");
