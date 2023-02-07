@@ -45,7 +45,7 @@ I WANT to see the weather outlook for multiple cities
 SO THAT I can plan a trip accordingly
 
 
-[Deployment link](https://havetimedrinktea.github.io/w07_Five_Day_Weather_Dashboard/)
+[Deployment link: https://havetimedrinktea.github.io/w08_Five_Day_Weather_Dashboard/](https://havetimedrinktea.github.io/w08_Five_Day_Weather_Dashboard/)
 
 
 ## Acceptance Criteria
