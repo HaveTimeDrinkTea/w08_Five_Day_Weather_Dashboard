@@ -323,6 +323,12 @@ button:active {
   text-align: left;
 }
 
+.weaIconFore {
+  font-size: 2.5rem;
+  color: var(--colorWhite);
+  text-align: center;
+}
+
 .tableWeather {
   border: 0.3rem double var(--colorWhite) !important;
   padding: 20px;
@@ -406,9 +412,23 @@ button:active {
 .foreTitleDay {
   font-size: 1.4rem;
   padding: 2px;
-  background-color: var(--colorPink);
+  margin: 0 !important;
+  background-color: var(--colorElectricBlue);
   border: 0.1rem solid var(--colorWhite) !important;
 }
+
+.foreTitleDayIcon {
+  display: inline-block;
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin: 0 !important;
+  width: 100%;
+  text-align: center;
+  background-color: var(--colorOrange);
+  border: 0.1rem solid var(--colorWhite) !important;
+  outline: auto;
+}
+
 
 .attr{
   font-size: 0.9rem;
@@ -436,7 +456,10 @@ button:active {
   margin: 0 !important;
 }
 
-
+.foreDesc {
+  font-size: 0.8rem;
+  line-height: 0rem;
+}
 
 
 
