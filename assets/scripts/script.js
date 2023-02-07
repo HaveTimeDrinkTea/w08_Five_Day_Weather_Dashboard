@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 
    //--==============================================      
-   //-- . Set API key and get user input city and get it's coords
+   //-- 1. Set API key and get user input city and get it's coords
    //--==============================================
    var APIKey = "23c1d2729442f28b96176ff1560c919f";
 
@@ -67,36 +67,12 @@ $(document).ready(function() {
 
 
    //--==============================================   
-   //-- 1. Get current day 
+   //-- 2. Get current day and current weather data
    //--==============================================   
-   var now = dayjs();
-   // var nowMidnightStartUnix = dayjs(now.startOf("date")).valueOf();
-
-   var todayDateString = dayjs(now).format("DD-MMM-YYYY");
-   // var todayHour = parseInt(dayjs(now).format("HH"));
-
-
-   // var todayDateUnix = dayjs(todayDateString).valueOf();
-
-   function getDate(unixDate, timeZone) {
-      let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HH:mm:ss");
-      return dayString;
-   }
-
-   function getDateTime(unixDate, timeZone) {
-      let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HHmm") + "h";
-      return dayString;
-   }
-
-   function getDateString(unixDate, timeZone) {
-      let dateString = dayjs((unixDate + timeZone) * 1000).format("DD MMM");
-      return dateString;
-   }
-
-   function getTime(unixDate, timeZone) {
-      let timeString = dayjs((unixDate + timeZone) * 1000).format("HH:mm");
-      return timeString;
-   }
+   
+   
+   //--------------------------------        
+   //-- 2.1 Function to format date time (taking into account of local time zones)
 
    function getDateTimeFormat(unixDate, timeZone, format) {
       let timeString = dayjs((unixDate + timeZone) * 1000).format(format);
@@ -107,7 +83,7 @@ $(document).ready(function() {
 
 
    //--------------------------------        
-   //-- 2.1 Get current weather data
+   //-- 2.2 Get location coordinates
 
    var isError = false;
 
@@ -226,7 +202,9 @@ $(document).ready(function() {
    let timeZone; //Shift in seconds from UTC
 
 
-//-- function to set background colour based on temperature
+   //--------------------------------        
+   //-- 3.2 function to set background colour based on temperature
+
    let bgColorClass;
 
    function setBgColor(temp) {
@@ -258,6 +236,9 @@ $(document).ready(function() {
       return bgColorClass;
    }
 
+   //--------------------------------        
+   //-- 3.3 Get Current weather and render it
+
    let currHourLocalTime; 
 
    function getWeather() {
@@ -276,8 +257,8 @@ $(document).ready(function() {
             currIconID = resWeather.weather[0].id;
             currIconDesc = resWeather.weather[0].description;
             timeZone = resWeather.timezone;
-            currSunRise = getTime(resWeather.sys.sunrise, timeZone);
-            currSunSet = getTime(resWeather.sys.sunset, timeZone);
+            currSunRise = getDateTimeFormat(resWeather.sys.sunrise, timeZone, "HH:mm");
+            currSunSet = getDateTimeFormat(resWeather.sys.sunset, timeZone, "HH:mm");
 
 
             //--------------------------------        
@@ -285,7 +266,7 @@ $(document).ready(function() {
 
             $("#currCity").text(cityName);
 
-            $("#currDateTime").text(getDateTime(dayjs().valueOf() / 1000, timeZone));
+            $("#currDateTime").text(getDateTimeFormat(dayjs().valueOf() / 1000, timeZone, "DD-MMM-YYYY, HH:mm"));
 
             let iconDay = "-n";
 
@@ -302,9 +283,9 @@ $(document).ready(function() {
             $("#currTemp").html("<i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> " + currTemp + "°C");
             $("#currWeaFeels").html("<i class='fa fa-commenting' aria-hidden='true'></i> Feels like <br>" + currFeelsLike + "°C");
             $("#currHumid").text(currHumid + "%");
-            $("#currWind").text(currWind + "m/s");
-            $("#currSunRise").text(currSunRise + "H");
-            $("#currSunSet").text(currSunSet + "H");
+            $("#currWind").text(currWind + "mps");
+            $("#currSunRise").text(currSunRise + "h");
+            $("#currSunSet").text(currSunSet + "h");
 
             //-- set background colour based on temperature
 
@@ -368,8 +349,6 @@ $(document).ready(function() {
 
                dayDiff = dayjs(arrayDateUnix).diff(foreCastMidnightStartUnix, "day");
 
-               // console.log(i, ": for", getDate(arrayDateUnix, 0), ", the diff is:", dayDiff);
-
                switch(dayDiff) {
                   case 1:
                      // code block
@@ -425,7 +404,7 @@ $(document).ready(function() {
 
             for (let i = 0; i < period_array.length; i++) {
 
-               dateStringForecast = getDateString(period_array[i].dt, forecastTimeZone);
+               dateStringForecast = getDateTimeFormat(period_array[i].dt, forecastTimeZone, "DD MMM");
 
                nowLocalHour = parseInt(getDateTimeFormat(dayjs().valueOf(), forecastTimeZone, "H"));
 
