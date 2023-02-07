@@ -8,55 +8,14 @@ $(document).ready(function() {
    //--====================== 
 
 
-   //--==============================================      
-   //-- 1. Set API key and get user input city and get it's coords
-   //--==============================================
-   var APIKey = "23c1d2729442f28b96176ff1560c919f";
-
-   let cityName = "london";
-   let queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey;
-
-   let locCorr = {
-      lat : "",
-      lon : "",
-   };
-
-   function getLocCorr(cityName) {
-      //get the coordinates of city based on user input.
-      $.ajax({
-         url: queryUrlGetLoc,
-         method: "GET"
-         }).then(function(resLocation) {
-            console.log("resLocation:", resLocation);
-            locCorr.lat = resLocation.city.coord.lat,
-            locCorr.lon = resLocation.city.coord.lon,
-            console.log("resLocation:", locCorr);
-            // User input validation before getting weather data
-
-            getWeather();
-            // get5DayForecast();
-
-
-      }).fail(function(e) {
-         console.log("error is:", e)
-         console.log("response:", e.responseJSON);
-         // need to catch the error here!!!!
-         return;
-      });
-   }
-
-   // getLocCorr(cityName);
-
-
-
 
    //--==============================================   
-   //-- 2. Get current day 
+   //-- 1. Get current day 
    //--==============================================   
    var now = dayjs();
    var nowMidnightStartUnix = dayjs(now.startOf("date")).valueOf();
-   var nowMidnightEndUnix = dayjs(now.endOf("date")).valueOf();
-   console.log("nowMidnight EOD:", nowMidnightEndUnix, "and that is actually:", dayjs(nowMidnightEndUnix).format("DD-MMM-YYYY HH:mm:ss"));
+   // var nowMidnightEndUnix = dayjs(now.endOf("date")).valueOf();
+   // console.log("nowMidnight EOD:", nowMidnightEndUnix, "and that is actually:", dayjs(nowMidnightEndUnix).format("DD-MMM-YYYY HH:mm:ss"));
    var todayDateString = dayjs(now).format("DD-MMM-YYYY");
    var todayHour = parseInt(dayjs(now).format("HH"));
 
@@ -66,15 +25,91 @@ $(document).ready(function() {
    console.log("todayDateString:", todayDateString);
    console.log("todayDateUnix:", todayDateUnix, "and that is actually:", dayjs(todayDateUnix).format("DD-MMM-YYYY"));
 
-   function getDate(unixDate) {
-      let dayString = dayjs(unixDate).format("DD-MMM-YYYY, HH:mm:ss");
+   function getDate(unixDate, timeZone) {
+      let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HH:mm:ss");
       return dayString;
    }
 
-   function getTime(unixDate) {
-      let timeString = dayjs(unixDate).format("HH:mm");
+   function getDateString(unixDate, timeZone) {
+      let dateString = dayjs((unixDate + timeZone) * 1000).format("DD MMM");
+      return dateString;
+   }
+
+   function getTime(unixDate, timeZone) {
+      let timeString = dayjs((unixDate + timeZone) * 1000).format("HH:mm");
       return timeString;
    }
+
+
+   //--==============================================      
+   //-- 2. Set API key and get user input city and get it's coords
+   //--==============================================
+   var APIKey = "23c1d2729442f28b96176ff1560c919f";
+
+   var cityName = "london";
+
+   let queryUrlGetLoc;
+
+   let locCorr = {
+      lat : "",
+      lon : "",
+   };
+
+
+
+
+
+   //--------------------------------        
+   //-- 2.1 Get current weather data
+
+   function getLocCorr(cityName) {
+
+      queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey;
+      //get the coordinates of city based on user input.
+      $.ajax({
+         url: queryUrlGetLoc,
+         method: "GET"
+         }).then(function(resLocation) {
+            console.log("resLocation:", resLocation);
+            locCorr.lat = resLocation.city.coord.lat,
+            locCorr.lon = resLocation.city.coord.lon,
+
+            // User input validation before getting weather data
+
+            getWeather();
+            get5DayForecast();
+
+
+      }).fail(function(e) {
+         console.log("error is:", e)
+         console.log("response:", e.responseJSON);
+         $("#errMsg").html("<i class='fa fa-exclamation-triangle' aria-hidden='true'></i>City does exist. Please try again.");
+         return;
+      });
+   }
+
+   getLocCorr(cityName);
+
+   //--------------------------------        
+   //-- 2.2 Get User Input
+
+   let userInputEl = $("#userTextInput");
+   let searchBtnEl = $("#search");
+
+   searchBtnEl.on("click", function() {
+      $("#errMsg").empty();
+      cityName = (userInputEl.val().trim()).toLowerCase();
+      console.log("user input city:", cityName);
+      
+      if (cityName === null) {
+         cityName = "london"; 
+      };
+
+      getLocCorr(cityName);
+      userInputEl.val("");
+
+   });
+
 
 
    //--==============================================   
@@ -83,7 +118,7 @@ $(document).ready(function() {
    
    //--------------------------------        
    //-- 3.1 Get current weather data
-
+  
    let currTemp;
    let currHumid;
    let currWind;
@@ -92,7 +127,40 @@ $(document).ready(function() {
    let currIconDesc;
    let currSunRise;
    let currSunSet;
+   let timeZone; //Shift in seconds from UTC
 
+
+//-- function to set background colour based on temperature
+   let bgColorClass;
+
+   function setBgColor(temp) {
+      if (temp >= 35) {
+         bgColorClass = "hotExtreme";
+      } else if ((temp >= 32) && (temp < 35)) {
+         bgColorClass = "hotVeryVery";
+      } else if ((temp >= 28) && (temp < 32)) {
+         bgColorClass = "hotVery";
+      } else if ((temp >= 25 ) && (temp < 28)) {
+         bgColorClass = "hotQuite";
+      } else if ((temp >= 20 ) && (temp < 25)) {
+         bgColorClass = "warmYucky";
+      } else if ((temp >= 12 ) && (temp < 20)) {
+         bgColorClass = "warmNice";
+      } else if ((temp >= 5 ) && (temp < 12)) {
+         bgColorClass = "coolNice";
+      } else if ((temp >= 1 ) && (temp < 5)) {
+         bgColorClass = "coolChilly";
+      } else if ((temp >= -5 ) && (temp < 1)) {
+         bgColorClass = "coldCold";
+      } else if ((temp >= -10 ) && (temp < -5)) {
+         bgColorClass = "coldVery";
+      } else if (temp < -10) {
+         bgColorClass = "freezing";
+      } else {
+         bgColorClass = "default";
+      };
+      return bgColorClass;
+   }
 
 
 
@@ -103,164 +171,293 @@ $(document).ready(function() {
       $.ajax({
          url: queryURL,
          method: "GET"
-         }).then(function(resWeatherTemp) {
-            console.log("resWeather:", resWeatherTemp);
+         }).then(function(resWeather) {
 
-            // localStorage.setItem("resWeather", JSON.stringify(resWeatherTemp));
-            // let resWeather = JSON.parse(localStorage.getItem("resWeather"));
+            console.log("resWeather:", resWeather);
 
-            // currTemp = resWeather.main.temp + "°C";
-            // currHumid = resWeather.main.humidity + "%";
-            // currWind = resWeather.wind.speed + "m/s";
-            // currFeelsLike = resWeather.main.feels_like + "°C";
-            // currIconID = resWeather.weather[0].id;
-            // currIconDesc = resWeather.weather[0].description;
-            // currSunRise = resWeather.sys.sunrise + " is " + getTime(resWeather.sys.sunrise * 1000);
-            // currSunSet = resWeather.sys.sunset + " is " + getTime(resWeather.sys.sunset * 1000);
-            // console.log("currTemp:", currTemp);
-            // console.log("currHumid:", currHumid);
-            // console.log("currWind:", currWind);
-            // console.log("currFeelsLike:", currFeelsLike);
-            // console.log("currIconID:", currIconID);
-            // console.log("currIconDesc:", currIconDesc);
-            // console.log("currSunRise:", currSunRise);
-            // console.log("currSunSet:", currSunSet);
-         });
-   }
-
-// all these should be inside the function ajax
-
-            let resWeather = JSON.parse(localStorage.getItem("resWeather"));
-
-            currTemp = parseFloat(resWeather.main.temp);
+            currTemp = resWeather.main.temp;
             currHumid = resWeather.main.humidity;
             currWind = resWeather.wind.speed;
             currFeelsLike = resWeather.main.feels_like;
             currIconID = resWeather.weather[0].id;
             currIconDesc = resWeather.weather[0].description;
-            currSunRise = getTime(resWeather.sys.sunrise * 1000);
-            currSunSet =  getTime(resWeather.sys.sunset * 1000);
-            console.log("currTemp:", currTemp);
-            console.log("currHumid:", currHumid);
-            console.log("currWind:", currWind);
-            console.log("currFeelsLike:", currFeelsLike);
-            console.log("currIconID:", currIconID);
-            console.log("currIconDesc:", currIconDesc);
-            console.log("currSunSet is " + currSunRise);
-            console.log("currSunrise is " + currSunSet);
+            timeZone = resWeather.timezone;
+            currSunRise = getTime(resWeather.sys.sunrise, timeZone);
+            currSunSet = getTime(resWeather.sys.sunset, timeZone);
 
 
-   //--------------------------------        
-   //-- 3.2 Render current weather data
+            //--------------------------------        
+            //-- 3.2 Render current weather data
 
-   $("#currCity").text(cityName);
+            $("#currCity").text(cityName);
 
-   let iconDay = "-n";
+            let iconDay = "-n";
 
-   if ((todayHour > 7) && (todayHour < 18) ) {
-      iconDay = "-d";
-   };
-   $("#weaIconMain").attr("class", "owf owf-"+ currIconID + iconDay +" owf-3x weaIconMain");
+            if ((todayHour > 7) && (todayHour < 18) ) {
+               iconDay = "-d";
+            };
+            $("#weaIconMain").attr("class", "owf owf-"+ currIconID + iconDay +" owf-3x weaIconMain");
 
-   $("#currWeaDesc").text(currIconDesc);
+            $("#currWeaDesc").text(currIconDesc);
 
 
-   $("#currTemp").html("<i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Now: " + currTemp + "°C");
-   $("#currWeaFeels").html("<i class='fa fa-commenting' aria-hidden='true'></i> Feels like <br>" + currFeelsLike + "°C");
-   $("#currHumid").text(currHumid + "%");
-   $("#currWind").text(currWind + "m/s");
-   $("#currSunRise").text(currSunRise + "H");
-   $("#currSunSet").text(currSunSet + "H");
+            $("#currTemp").html("<i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Now: " + currTemp + "°C");
+            $("#currWeaFeels").html("<i class='fa fa-commenting' aria-hidden='true'></i> Feels like <br>" + currFeelsLike + "°C");
+            $("#currHumid").text(currHumid + "%");
+            $("#currWind").text(currWind + "m/s");
+            $("#currSunRise").text(currSunRise + "H");
+            $("#currSunSet").text(currSunSet + "H");
 
-   //-- set background colour based on temperature
+            //-- set background colour based on temperature
 
-   let bgEl = $("#currCityWeather");
-
-   console.log("currTemp:", currTemp);
-
-   let currTemp1 = 18;
+            let bgEl = $("#currCityWeather");
    
-   if (currTemp1 >= 35) {
-      bgEl.addClass("hotExtreme");
-   } else if ((currTemp >= 32) && (currTemp < 35)) {
-      bgEl.addClass("hotVeryVery");
-   } else if ((currTemp >= 28) && (currTemp < 32)) {
-      bgEl.addClass("hotVery");
-   } else if ((currTemp >= 25 ) && (currTemp < 28)) {
-      bgEl.addClass("hotQuite");
-   } else if ((currTemp >= 20 ) && (currTemp < 25)) {
-      bgEl.addClass("warmYucky");
-   } else if ((currTemp >= 12 ) && (currTemp < 20)) {
-      bgEl.addClass("warmNice");
-   } else if ((currTemp >= 7 ) && (currTemp < 12)) {
-      bgEl.addClass("coolNice");
-   } else if ((currTemp >= 1 ) && (currTemp < 7)) {
-      bgEl.addClass("coolChilly");
-   } else if ((currTemp >= -5 ) && (currTemp < 1)) {
-      bgEl.addClass("coldCold");
-   } else if ((currTemp >= -10 ) && (currTemp < -5)) {
-      bgEl.addClass("coldVery");
-   } else if (currTemp < -10) {
-      bgEl.addClass("freezing");
-   } else {
-      bgEl.addClass("default");
-   };
+            bgEl.removeClass();
+            bgEl.addClass("table table-sm table-borderless tableWeather center " + setBgColor(currTemp));
+
+         });
+   //-- end of function getWeather()      
+   }
 
 
 
 
-   // let isUseCnt = true;
-   let isUseCnt = false;
-   let cntNum =5;
-   let cntNumParam;
-
-   if (isUseCnt) {
-      cntNumParam ="&cnt=" + cntNum;
-   } else {
-
-      cntNumParam ="";
-   };
 
 
    //--==============================================   
    //-- 4. Get Five Day Forecast
    //--==============================================     
 
-   let res5DayArray;
+   // let res5DayArray;
 
-   let day0Array = [];
-   let day1Array = [];
-   let day2Array = [];
-   let day3Array = [];
-   let day4Array = [];
-   let day5Array = [];
-   let dayDiff;
+   // let day0Array = [];
+   // let day1Array = [];
+   // let day2Array = [];
+   // let day3Array = [];
+   // let day4Array = [];
+   // let day5Array = [];
+   // let dayDiff;
 
 
-   let temp;
-   var tempMax;
-   var tempMin;
-   var humidity;
-   var humidMax;
-   var humidMin
-   let wind;
-   var windMax;
-   var windMin;
+   // let temp;
+   // var tempMax;
+   // var tempMin;
+   // let humidity;
+   // var humidMax;
+   // var humidMin
+   // let wind;
+   // var windMax;
+   // var windMin;
 
    var fiveDayMaxMinArr;
 
 
    function get5DayForecast() {
    // Get the 5-day weather forecast for a location
-      let queryURL5Day = "https://api.openweathermap.org/data/2.5/forecast?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric" + cntNumParam + "&appid=" + APIKey;
+      let queryURL5Day = "https://api.openweathermap.org/data/2.5/forecast?lat=" + locCorr.lat + "&lon=" + locCorr.lon + "&units=metric&appid=" + APIKey;
+      // res5DayArray = "";
+      let res5DayArray;
+
+      let day0Array = [];
+      let day1Array = [];
+      let day2Array = [];
+      let day3Array = [];
+      let day4Array = [];
+      let day5Array = [];
+      let dayDiff;
+
 
       $.ajax({
          url: queryURL5Day,
          method: "GET"
          }).then(function(results) {
             res5DayArray = results;
-            console.log("Weather Forecast:", res5DayArray);
-            prep5DayData(res5DayArray) ;
+            console.log("Weather Forecast:", results);
+
+         //--------------------------------        
+         //-- 4.1 Put Each day in 5Day Forecast in own array
+
+         var forecastTimeZone;
+
+         function prep5DayData(results) {
+
+
+            console.log("res5DayArray.list.length:", results.list.length);
+
+            forecastTimeZone = results.city.timezone;
+            let nowLocal = dayjs().valueOf() + forecastTimeZone;
+            console.log("nowLocal", nowLocal, " is ", dayjs(nowLocal).format("DD-MMM-YYYY HH:mm"));
+            var foreCastMidnightStartUnix = dayjs(dayjs(nowLocal).startOf("date")).valueOf();
+
+            for (let i = 0; i < results.list.length; i++) {
+
+               let arrayDateUnix = (results.list[i].dt * 1000) + forecastTimeZone;
+
+               console.log("forecastTimeZone", forecastTimeZone);
+               console.log("arrayDateUnix", arrayDateUnix, " is ", dayjs(arrayDateUnix).format("DD-MMM-YYYY HH:mm"));
+
+               console.log("foreCastMidnightStartUnix", foreCastMidnightStartUnix, " is ", dayjs(foreCastMidnightStartUnix).format("DD-MMM-YYYY HH:mm"));              
+
+               dayDiff = dayjs(arrayDateUnix).diff(foreCastMidnightStartUnix, "day");
+
+               console.log(i, ": for", getDate(arrayDateUnix, 0), ", the diff is:", dayDiff);
+
+               switch(dayDiff) {
+                  case 1:
+                     // code block
+                     day1Array.push(results.list[i]);
+                     console.log("day1Array:", day1Array);
+                     break;
+                  case 2:
+                     // code block
+                     day2Array.push(results.list[i]);
+                     console.log("day2Array:", day2Array);
+                     break;
+                  case 3:
+                     // code block
+                     day3Array.push(results.list[i]);
+                     console.log("day3Array:", day3Array);
+                     break;
+                  case 4:
+                     // code block
+                     day4Array.push(results.list[i]);
+                     console.log("day4Array:", day4Array);
+                     break;
+                  case 5:
+                     // code block
+                     day5Array.push(results.list[i]); 
+                     console.log("day5Array:", day5Array);
+                     break;   
+                  default:
+                     day0Array.push(results.list[i]); 
+                     console.log("day0Array:", day0Array);
+               };
+
+            };
+         //-- end of prep5DayData(res5DayArray) 
+         }
+
+         prep5DayData(results);
+
+         //--------------------------------        
+         //-- 4.2 Compute the Max and Min of each day in 5Day forecast 
+
+         var dayCnt = 0;
+         let dateStringForecast;
+         let avgTemp;
+
+         function getPeriodMaxMin(period_array) {
+
+            let temp;
+            var tempMax;
+            var tempMin;
+            let humidity;
+            var humidMax;
+            var humidMin
+            let wind;
+            var windMax;
+            var windMin;
+
+            for (let i = 0; i < period_array.length; i++) {
+
+               dateStringForecast = getDateString(period_array[i].dt, forecastTimeZone);
+               console.log("dateStringForecast:", dateStringForecast);
+               temp = period_array[i].main.temp;
+               humidity = period_array[i].main.humidity;
+               wind = period_array[i].wind.speed;
+
+               if (i === 0) {
+                  tempMax = temp;
+                  tempMin = temp;
+                  humidMax = humidity;
+                  humidMin = humidity;
+                  windMax = wind;
+                  windMin = wind;
+                  console.log("im in zero!");
+               };
+
+               console.log("====================================");
+               console.log("temp/humidity/wind for index:", i, "is", temp, "/", humidity, "/", wind);     
+
+               if (temp > tempMax) {
+                  tempMax = temp;
+               } else if (temp < tempMin) {
+                  tempMin = temp;
+               };
+
+               if (humidity > humidMax) {
+                  humidMax = humidity;
+               } else if (humidity < humidMin) {
+                  humidMin = humidity;
+               };
+
+               if (wind > windMax) {
+                  windMax = wind;
+               } else if (wind < windMin) {
+                  windMin = wind;
+               }
+               //-- end of for loop
+            };
+
+            console.log("Final max/min");
+            console.log("**************************");
+            console.log("temp:", tempMax, "/", tempMin);
+            console.log("humidity:", humidMax, "/", humidMin);
+            console.log("wind:", windMax, "/", windMin);
+
+            avgTemp = ((tempMax + tempMin)/2);
+
+            if (dayCnt === 0) {
+               fiveDayMaxMinArr = [
+                  {
+                     day : dayCnt,
+                     date : dateStringForecast,
+                     avgTemp: avgTemp.toFixed(1),
+                     tempMax: tempMax,
+                     tempMin: tempMin, 
+                     humidMax: humidMax,
+                     humidMin: humidMin,
+                     windMax: windMax,
+                     windMin: windMin,        
+                  },
+               ];
+            } else {
+               fiveDayMaxMinArr.push(
+                  {
+                     day : dayCnt,
+                     date : dateStringForecast,     
+                     avgTemp: avgTemp.toFixed(1),          
+                     tempMax: tempMax,
+                     tempMin: tempMin, 
+                     humidMax: humidMax,
+                     humidMin: humidMin,
+                     windMax: windMax,
+                     windMin: windMin,        
+                  }
+               )
+            };
+
+            dayCnt ++;
+            console.log("fiveDayMaxMinArr:", fiveDayMaxMinArr);
+
+
+         //--------------------------------        
+         //-- 4.3 render 5 day forecast 
+            let dayNum;
+
+            for (let i = 0; i < fiveDayMaxMinArr.length; i++) {
+               dayNum = i +1;
+               $("#foreTitleDay" + dayNum).text(fiveDayMaxMinArr[i].date);
+               $("#foreTempDay" + dayNum).html(fiveDayMaxMinArr[i].tempMin + "°C <br> to <br>"+ fiveDayMaxMinArr[i].tempMax + "°C");
+               $("#foreHumidDay" + dayNum).html(fiveDayMaxMinArr[i].humidMin + "% <br> to <br>" + fiveDayMaxMinArr[i].humidMax + "%");
+               $("#foreWindDay" + dayNum).html(fiveDayMaxMinArr[i].windMin + " m/s <br> to <br>" + fiveDayMaxMinArr[i].windMax + " m/s" );
+               let bgCard = $("#fDay" + dayNum);
+               bgCard.removeClass();
+               bgCard.addClass("card " + setBgColor(fiveDayMaxMinArr[i].avgTemp));
+            };
+            // end of function getPeriodMaxMin()
+         } 
+
             getPeriodMaxMin(day1Array);
             getPeriodMaxMin(day2Array);
             getPeriodMaxMin(day3Array);
@@ -268,161 +465,10 @@ $(document).ready(function() {
             getPeriodMaxMin(day5Array);
          });
    }
+
    
    
-   //--------------------------------        
-   //-- 4.1 Put Each day in 5Day Forecast in own array
-
-   function prep5DayData(res5DayArray) {
-      
-      
-      // console.log("todayDateUnix:", nowMidnightEndUnix, "or", getDate(nowMidnightEndUnix));
-
-      // console.log("the difference is :", dayjs('2023-02-04').diff(dayjs('2023-02-05'),"day"));
-         
-
-
-      console.log("res5DayArray.list.length:", res5DayArray.list.length);
-
-      for (let i = 0; i < res5DayArray.list.length; i++) {
-
-         let arrayDateUnix = res5DayArray.list[i].dt * 1000;
-
-         dayDiff = dayjs(getDate(arrayDateUnix)).diff(getDate(nowMidnightStartUnix), "day");
-         console.log(i, ": for", getDate(arrayDateUnix), ", the diff is:", dayDiff);
-
-         switch(dayDiff) {
-            case 1:
-               // code block
-               day1Array.push(res5DayArray.list[i]);
-               console.log("day1Array:", day1Array);
-               break;
-            case 2:
-               // code block
-               day2Array.push(res5DayArray.list[i]);
-               console.log("day2Array:", day2Array);
-               break;
-            case 3:
-               // code block
-               day3Array.push(res5DayArray.list[i]);
-               console.log("day3Array:", day3Array);
-               break;
-            case 4:
-               // code block
-               day4Array.push(res5DayArray.list[i]);
-               console.log("day4Array:", day4Array);
-               break;
-            case 5:
-               // code block
-               day5Array.push(res5DayArray.list[i]); 
-               console.log("day5Array:", day5Array);
-               break;   
-            default:
-               day0Array.push(res5DayArray.list[i]); 
-               console.log("day0Array:", day0Array);
-         };
-
-      };
-
-   }
-
-
-   //--------------------------------        
-   //-- 4.2 Compute the Max and Min of each day in 5Day forecast 
-
-   var dayCnt = 0;
-
-   function getPeriodMaxMin(period_array) {
-
-      for (let i = 0; i < period_array.length; i++) {
-
-         temp = period_array[i].main.temp;
-         humidity = period_array[i].main.humidity;
-         wind = period_array[i].wind.speed;
-
-         if (i === 0) {
-            tempMax = temp;
-            tempMin = temp;
-            humidMax = humidity;
-            humidMin = humidity;
-            windMax = wind;
-            windMin = wind;
-            console.log("im in zero!");
-         };
-
-         // console.log("temp/humidity/wind:", temp, "/", humidity, "/", wind);
-         console.log("====================================");
-         console.log("temp/humidity/wind for index:", i, "is", temp, "/", humidity, "/", wind);
    
-         // get max min temp
-         // console.log("Go check max/min - temp/tempMax/tempMin:", temp, "/", tempMax, "/", tempMin);         
-
-         if (temp > tempMax) {
-            tempMax = temp;
-            // console.log("Im in max!: ", temp, "/", tempMax, "/", tempMin);
-         } else if (temp < tempMin) {
-            tempMin = temp;
-            // console.log("Im in min!: ", temp, "/", tempMax, "/", tempMin);
-         };
-
-         // console.log("Now completed getPeriodMaxMin - temp/tempMax/tempMin:", temp, "/", tempMax, "/", tempMin);
-
-         if (humidity > humidMax) {
-            humidMax = humidity;
-            // console.log("Im in max!: ", humidity, "/", humidMax, "/", humidMin);
-         } else if (humidity < humidMin) {
-            humidMin = humidity;
-            // console.log("Im in min!: ", humidity, "/", humidMax, "/", humidMin);
-         };
-
-         if (wind > windMax) {
-            windMax = wind;
-            // console.log("Im in max!: ", wind, "/", windMax, "/", windMin);
-         } else if (wind < windMin) {
-            windMin = wind;
-            // console.log("Im in min!: ", wind, "/", windMax, "/", windMin);
-         }
-
-
-
-      };
-
-      console.log("Final max/min");
-      console.log("**************************");
-      console.log("temp:", tempMax, "/", tempMin);
-      console.log("humidity:", humidMax, "/", humidMin);
-      console.log("wind:", windMax, "/", windMin);
-
-      if (dayCnt === 0) {
-         fiveDayMaxMinArr = [
-            {
-               day : dayCnt,
-               tempMax: tempMax,
-               tempMin: tempMin, 
-               humidMax: humidMax,
-               humidMin: humidMin,
-               windMax: windMax,
-               windMin: windMin,        
-            },
-         ];
-      } else {
-         fiveDayMaxMinArr.push(
-            {
-               day : dayCnt,
-               tempMax: tempMax,
-               tempMin: tempMin, 
-               humidMax: humidMax,
-               humidMin: humidMin,
-               windMax: windMax,
-               windMin: windMin,        
-            }
-         )
-      };
-
-      dayCnt ++;
-      console.log("fiveDayMaxMinArr:", fiveDayMaxMinArr);
-
-   } // end of function getPeriodMaxMin()
 
 
 

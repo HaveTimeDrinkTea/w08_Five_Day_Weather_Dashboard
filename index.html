@@ -41,10 +41,14 @@
       <div class="row">
          <div class="col-sm-12">
             <div class="jumbotron">
-               <h1 class="display-4">Hello, world!</h1>
-               <p class="lead">This is a simple hero unit,</p>
-               <p>It uses utility classes for typography </p>
-               <a class="btn btn-primary btn-lg hide" href="#" role="button">Learn more</a>
+               <h1 class="display-4">Super Duper Weather App</h1>
+               <div class="searchBar">
+                  <label for="userTextInput"></label>
+                  <input type="text" id="userTextInput" name="userTextInput" placeholder="City Name">
+                  <button id="search">&nbsp;&nbsp;<i class="fas fa-search-location">&nbsp;&nbsp;</i> </button> 
+                  <div id="errMsg"></div>
+               </div>
+
             </div>
          </div>
 
@@ -53,8 +57,7 @@
    <main class="container-fluid main" id="main">
       <section>
       <div class="row">
-         <!-- left column -->
-         <div class="col-sm-12 col-md-6">
+         <div class="col-sm-12">
             <div class="row">
                <table class="table table-sm table-borderless tableWeather center" id ="currCityWeather">
                   <tbody>
@@ -94,17 +97,111 @@
                </table>
             </div>   
          </div>
-         <!-- right column -->
-         <div class="col-sm-12 col-md-6">
-            section RIGHT
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+      </div>
+<!-- 5-day forecast -->
+      <div class="row"> 
+         <div class="col-sm-12">
+            <h2>Five Day Forecast</h2>
+            <div class="container">
+               <div class="row">
+                  <!-- Day 0 column -->    
+                  <div class="col-sm-1">
+                     &nbsp;
+                  </div>
+                  <!-- Day 1 -->      
+                  <div class="col-sm-2">
+                     <div class="card" id="fDay1">
+                        <div class="card-body">
+                           <h5 class="card-title foreTitleDay" id="foreTitleDay1"></h5>
+                           <span class="attr"><i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Temp </span><br>
+                           <span id="foreTempDay1"></span></td>
+                           <br><br>
+                           <span class="attr"><i class="fa fa-water"></i> Humidity</span><br>
+                           <span id="foreHumidDay1"></span> 
+                           <br><br>
+                           <span class="attr"><i class="fa fa-wind"></i> Wind</span> <br>
+                           <span id="foreWindDay1"></span>
+                        </div>
+                     </div>
+                  </div>                     
+                  <!-- Day 2-->
+                  <div class="col-sm-2">
+                     <div class="card" id="fDay2">
+                        <div class="card-body">
+                           <h5 class="card-title foreTitleDay" id="foreTitleDay2"></h5>
+                           <span class="attr"><i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Temp </span><br>
+                           <span id="foreTempDay2"></span></td>
+                           <br><br>
+                           <span class="attr"><i class="fa fa-water"></i> Humidity</span><br>
+                           <span id="foreHumidDay2"></span> 
+                           <br><br>
+                           <span class="attr"><i class="fa fa-wind"></i> Wind</span> <br>
+                           <span id="foreWindDay2"></span>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Day 3-->
+                  <div class="col-sm-2">
+                     <div class="card" id="fDay3">
+                        <div class="card-body">
+                           <h5 class="card-title foreTitleDay" id="foreTitleDay3"></h5>
+                           <span class="attr"><i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Temp </span><br>
+                           <span id="foreTempDay3"></span></td>
+                           <br><br>
+                           <span class="attr"><i class="fa fa-water"></i> Humidity</span><br>
+                           <span id="foreHumidDay3"></span> 
+                           <br><br>
+                           <span class="attr"><i class="fa fa-wind"></i> Wind</span> <br>
+                           <span id="foreWindDay3"></span>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Day 4 -->
+                  <div class="col-sm-2">
+                     <div class="card" id="fDay4">
+                        <div class="card-body">
+                           <h5 class="card-title foreTitleDay" id="foreTitleDay4"></h5>
+                           <span class="attr"><i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Temp </span><br>
+                           <span id="foreTempDay4"></span></td>
+                           <br><br>
+                           <span class="attr"><i class="fa fa-water"></i> Humidity</span><br>
+                           <span id="foreHumidDay4"></span> 
+                           <br><br>
+                           <span class="attr"><i class="fa fa-wind"></i> Wind</span> <br>
+                           <span id="foreWindDay4"></span>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Day 5 -->
+                  <div class="col-sm-2">
+                     <div class="card" id="fDay5">
+                        <div class="card-body">
+                           <h5 class="card-title foreTitleDay" id="foreTitleDay5"></h5>
+                           <span class="attr"><i class='fa fa-thermometer-three-quarters' aria-hidden='true'></i> Temp </span><br>
+                           <span id="foreTempDay5"></span></td>
+                           <br><br>
+                           <span class="attr"><i class="fa fa-water"></i> Humidity</span><br>
+                           <span id="foreHumidDay5"></span> 
+                           <br><br>
+                           <span class="attr"><i class="fa fa-wind"></i> Wind</span> <br>
+                           <span id="foreWindDay5"></span>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- Day Empty column -->                  
+                  <div class="col-sm-1">
+                     &nbsp;
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+            <!-- <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                <p class="text-center owf-icon">
                <a tabindex="0" class="btn btn-lg btn-default btn-popover" role="button" data-toggle="popover" data-trigger="click" title=" thunderstorm with heavy rain " data-content='&lt;i class="owf owf-201"&gt;&lt;/i&gt;'><i class="owf owf-959-n owf-3x" style="color: white; font-size: 5rem;"></i></a>
                <span class="owf-descr"></span>
                </p>
-            </div>
-         </div>
-      </div>
+            </div> -->
       </section>
    </main>
    <footer class="container-fluid">
