@@ -66,11 +66,10 @@ $(document).ready(function() {
 
    searchBtnStoredArr = JSON.parse(localStorage.getItem("searchBtnArr"));
 
-   console.log("searchBtnStoredArr", searchBtnStoredArr);
+   // console.log("searchBtnStoredArr", searchBtnStoredArr);
 
 
-
-   console.log("searchBtnStoredArr here", searchBtnStoredArr);
+   // console.log("searchBtnStoredArr here", searchBtnStoredArr);
 
    //--==============================================   
    //-- 1. Get current day 
@@ -94,7 +93,7 @@ $(document).ready(function() {
    }
 
    function getDateTime(unixDate, timeZone) {
-      let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HHmm") + "H";
+      let dayString = dayjs((unixDate + timeZone) * 1000).format("DD-MMM-YYYY, HHmm") + "h";
       return dayString;
    }
 
@@ -105,6 +104,11 @@ $(document).ready(function() {
 
    function getTime(unixDate, timeZone) {
       let timeString = dayjs((unixDate + timeZone) * 1000).format("HH:mm");
+      return timeString;
+   }
+
+   function getDateTimeFormat(unixDate, timeZone, format) {
+      let timeString = dayjs((unixDate + timeZone) * 1000).format(format);
       return timeString;
    }
 
@@ -168,7 +172,9 @@ $(document).ready(function() {
 
 
    searchBtnEl.on("click", function() {
+
       $("#errMsg").empty();
+
       cityName = (userInputEl.val().trim()).toLowerCase();
       console.log("user input city:", cityName);
       
@@ -294,9 +300,9 @@ $(document).ready(function() {
             //-- 3.2 Render current weather data
 
             $("#currCity").text(cityName);
-            console.log("dayjs()", dayjs(now).valueOf());
-            console.log("timeZone:", timeZone);
-            console.log("current date and time:", getDateTime(dayjs(now).valueOf() / 1000, timeZone));
+            // console.log("dayjs()", dayjs(now).valueOf());
+            // console.log("timeZone:", timeZone);
+            // console.log("current date and time:", getDateTime(dayjs(now).valueOf() / 1000, timeZone));
 
             $("#currDateTime").text(getDateTime(dayjs(now).valueOf() / 1000, timeZone));
 
@@ -374,7 +380,9 @@ $(document).ready(function() {
 
             forecastTimeZone = results.city.timezone;
             let nowLocal = dayjs().valueOf() + forecastTimeZone;
-            console.log("nowLocal", nowLocal, " is ", dayjs(nowLocal).format("DD-MMM-YYYY HH:mm"));
+   
+
+            // console.log("nowLocal", nowLocal, " is ", dayjs(nowLocal).format("DD-MMM-YYYY HH:mm"));
             var foreCastMidnightStartUnix = dayjs(dayjs(nowLocal).startOf("date")).valueOf();
 
             for (let i = 0; i < results.list.length; i++) {
@@ -445,10 +453,29 @@ $(document).ready(function() {
             let wind;
             var windMax;
             var windMin;
+            let iconDesc;
+            let iconID;
 
             for (let i = 0; i < period_array.length; i++) {
 
                dateStringForecast = getDateString(period_array[i].dt, forecastTimeZone);
+
+               let nowLocalHour = parseInt(getDateTimeFormat(dayjs().valueOf(), forecastTimeZone, "H"));
+
+               console.log("nowLocalHour:",nowLocalHour);
+
+               let LocalReadingHour = parseInt(getDateTimeFormat(period_array[i].dt, forecastTimeZone, "H"));
+
+               console.log("LocalReadingHour:",LocalReadingHour);
+
+               if ((nowLocalHour >= LocalReadingHour) && (nowLocalHour <= LocalReadingHour +3)) {
+                  console.log("in if nowLocalHour:",nowLocalHour);
+                  console.log("in if LocalReadingHour:",LocalReadingHour);
+                  iconDesc = period_array[i].weather[0].description;
+                  iconID = period_array[i].weather[0].id;
+               };
+
+
                console.log("dateStringForecast:", dateStringForecast);
                temp = period_array[i].main.temp;
                humidity = period_array[i].main.humidity;
@@ -461,7 +488,7 @@ $(document).ready(function() {
                   humidMin = humidity;
                   windMax = wind;
                   windMin = wind;
-                  console.log("im in zero!");
+                  // console.log("im in zero!");
                };
 
                console.log("====================================");
@@ -500,6 +527,8 @@ $(document).ready(function() {
                   {
                      day : dayCnt,
                      date : dateStringForecast,
+                     iconDesc: iconDesc,
+                     iconID: iconID,
                      avgTemp: avgTemp.toFixed(1),
                      tempMax: tempMax,
                      tempMin: tempMin, 
@@ -513,7 +542,9 @@ $(document).ready(function() {
                fiveDayMaxMinArr.push(
                   {
                      day : dayCnt,
-                     date : dateStringForecast,     
+                     date : dateStringForecast,   
+                     iconDesc: iconDesc,
+                     iconID: iconID,
                      avgTemp: avgTemp.toFixed(1),          
                      tempMax: tempMax,
                      tempMin: tempMin, 
@@ -536,6 +567,18 @@ $(document).ready(function() {
             for (let i = 0; i < fiveDayMaxMinArr.length; i++) {
                dayNum = i +1;
                $("#foreTitleDay" + dayNum).text(fiveDayMaxMinArr[i].date);
+
+               let iconForeDay = "-n";
+
+               if ((todayHour > 7) && (todayHour < 18) ) {
+                  iconForeDay = "-d";
+               };
+
+               $("#foreIconDay" + dayNum).attr("class", "owf owf-"+ fiveDayMaxMinArr[i].iconID + iconForeDay +" owf-2x weaIconMain");
+
+
+               $("#foreDescDay" + dayNum).text(fiveDayMaxMinArr[i].iconDesc);
+
                $("#foreTempDay" + dayNum).html(fiveDayMaxMinArr[i].tempMin + "°C <br> to <br>"+ fiveDayMaxMinArr[i].tempMax + "°C");
                $("#foreHumidDay" + dayNum).html(fiveDayMaxMinArr[i].humidMin + "% <br> to <br>" + fiveDayMaxMinArr[i].humidMax + "%");
                $("#foreWindDay" + dayNum).html(fiveDayMaxMinArr[i].windMin + " m/s <br> to <br>" + fiveDayMaxMinArr[i].windMax + " m/s" );
