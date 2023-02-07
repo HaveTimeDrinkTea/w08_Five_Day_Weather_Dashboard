@@ -107,8 +107,9 @@ li:hover {
   background-color: transparent;
   color: var(--colorWhite);
   border-radius: 0;
-  border: 0;
-  margin: 0;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 20px !important;
   /* border-bottom: 10px solid black; */
 
 }
@@ -116,6 +117,7 @@ li:hover {
 #errMsg {
   font-size: 1.2rem;
   color: var(--colorRed);
+  text-shadow: 2px 2px var(--colorCharcoalDarker);
 }
 
 header::after,
@@ -271,6 +273,26 @@ button:active {
   color: var(--fontVintage);
 }
 
+.searchBtns {
+  display: inline-block;
+  padding: 0.3rem;
+  margin: 0rem;
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: auto;
+  color: var(--colorWhite);
+  background-color: var(--colorGreen);
+  border: solid 0.2rem var(--colorWhite);
+  border-radius: 5px;
+  box-shadow: 0.3rem 0.3rem var(--colorCharcoal);
+}
+
+.btnText {
+  text-transform: capitalize;
+}
 
 /* basic structural */
 
@@ -394,6 +416,25 @@ button:active {
   background-color: var(--colorPink);
 }
 
+
+/* search cards */
+
+.searchBtnsRow {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.cardButtons {
+  border: 0 !important;
+  padding: 0;
+  margin: 0;
+  background-color: var(--colorElectricBlue) !important;
+}
+
+.card-body-btn {
+  padding: 0 !important;
+  margin: 0 !important;
+}
 
 
 

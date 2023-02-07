@@ -9,6 +9,69 @@ $(document).ready(function() {
 
 
 
+   //--==============================================      
+   //-- . Set API key and get user input city and get it's coords
+   //--==============================================
+   var APIKey = "23c1d2729442f28b96176ff1560c919f";
+
+   let queryUrlGetLoc;
+
+   let locCorr = {
+      lat : "",
+      lon : "",
+   };
+
+   var cityName;
+
+   function init() {
+      queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/weather?q=london&appid=" + APIKey;
+      console.log(queryUrlGetLoc);
+      //get the coordinates of city based on user input.
+      $.ajax({
+         url: queryUrlGetLoc,
+         method: "GET"
+         }).then(function(resLocation) {
+            console.log("resLocation here:", resLocation);
+            locCorr.lat = resLocation.coord.lat;
+            locCorr.lon = resLocation.coord.lon;
+            cityName = resLocation.name;
+
+            // User input validation before getting weather data
+
+            getWeather();
+            get5DayForecast();
+
+
+   //-- here
+   var searchBtnStoredArr;
+   var searchBtnDefaultArr;
+
+   function setSearchArray() {
+      searchBtnStoredArr = JSON.parse(localStorage.getItem("searchBtnArr"));
+
+      console.log("searchBtnStoredArr", searchBtnStoredArr);
+      if (!(searchBtnStoredArr)) {
+         searchBtnDefaultArr = [
+            "singapore",
+            "tokyo",
+            "washington",
+            "shanghai",
+            "cape town"
+         ];
+         localStorage.setItem("searchBtnArr",JSON.stringify(searchBtnDefaultArr));
+      };
+   }
+
+   setSearchArray();
+
+   searchBtnStoredArr = JSON.parse(localStorage.getItem("searchBtnArr"));
+
+   console.log("searchBtnStoredArr", searchBtnStoredArr);
+
+
+
+   console.log("searchBtnStoredArr here", searchBtnStoredArr);
+
    //--==============================================   
    //-- 1. Get current day 
    //--==============================================   
@@ -41,20 +104,6 @@ $(document).ready(function() {
    }
 
 
-   //--==============================================      
-   //-- 2. Set API key and get user input city and get it's coords
-   //--==============================================
-   var APIKey = "23c1d2729442f28b96176ff1560c919f";
-
-   var cityName = "london";
-
-   let queryUrlGetLoc;
-
-   let locCorr = {
-      lat : "",
-      lon : "",
-   };
-
 
 
 
@@ -62,17 +111,19 @@ $(document).ready(function() {
    //--------------------------------        
    //-- 2.1 Get current weather data
 
+   var isError = false;
+
    function getLocCorr(cityName) {
 
-      queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=" + APIKey;
+      queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
       //get the coordinates of city based on user input.
       $.ajax({
          url: queryUrlGetLoc,
          method: "GET"
          }).then(function(resLocation) {
             console.log("resLocation:", resLocation);
-            locCorr.lat = resLocation.city.coord.lat,
-            locCorr.lon = resLocation.city.coord.lon,
+            locCorr.lat = resLocation.coord.lat;
+            locCorr.lon = resLocation.coord.lon;
 
             // User input validation before getting weather data
 
@@ -83,18 +134,33 @@ $(document).ready(function() {
       }).fail(function(e) {
          console.log("error is:", e)
          console.log("response:", e.responseJSON);
-         $("#errMsg").html("<i class='fa fa-exclamation-triangle' aria-hidden='true'></i>City does exist. Please try again.");
-         return;
-      });
+         $("#errMsg").html("<i class='fa fa-exclamation-triangle' aria-hidden='true'></i> <i class='fa fa-hand-paper-o' aria-hidden='true'></i> City does not exist. Please try again.");
+         isError = true;
+         console.log("here:", isError);
+      })
+      .then(function(){
+         console.log("here check error:", isError);
+         if (isError === false) {
+            searchBtnStoredArr = JSON.parse(localStorage.getItem("searchBtnArr"));
+            searchBtnStoredArr.pop();
+            searchBtnStoredArr.unshift(cityName);
+            localStorage.setItem("searchBtnArr",JSON.stringify(searchBtnStoredArr));
+            renderSearchButtons();
+         };
+         isError = false;
+      })
+      ;
    }
 
    getLocCorr(cityName);
 
    //--------------------------------        
-   //-- 2.2 Get User Input
+   //-- 2.3 Get User Input
 
    let userInputEl = $("#userTextInput");
    let searchBtnEl = $("#search");
+
+
 
    searchBtnEl.on("click", function() {
       $("#errMsg").empty();
@@ -108,7 +174,43 @@ $(document).ready(function() {
       getLocCorr(cityName);
       userInputEl.val("");
 
+
+
    });
+   
+   //--------------------------------        
+   //-- 2.4 Search Buttons
+
+
+   function renderSearchButtons() {
+      for (let i = 0; i < searchBtnStoredArr.length; i++) {
+         let cntNum = i + 1;
+         $("#btn" + cntNum).text(searchBtnStoredArr[i]);
+         $("#btn" + cntNum).on("click", function(){
+            cityName = searchBtnStoredArr[i];
+            queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
+            //get the coordinates of city based on user input.
+            $.ajax({
+               url: queryUrlGetLoc,
+               method: "GET"
+               }).then(function(resLocation) {
+                  console.log("resLocation:", resLocation);
+                  locCorr.lat = resLocation.coord.lat;
+                  locCorr.lon = resLocation.coord.lon;
+      
+                  // User input validation before getting weather data
+      
+                  getWeather();
+                  get5DayForecast();
+         });
+      });
+   };
+}
+
+   renderSearchButtons();
+
+
+
 
 
 
@@ -227,27 +329,6 @@ $(document).ready(function() {
    //--==============================================   
    //-- 4. Get Five Day Forecast
    //--==============================================     
-
-   // let res5DayArray;
-
-   // let day0Array = [];
-   // let day1Array = [];
-   // let day2Array = [];
-   // let day3Array = [];
-   // let day4Array = [];
-   // let day5Array = [];
-   // let dayDiff;
-
-
-   // let temp;
-   // var tempMax;
-   // var tempMin;
-   // let humidity;
-   // var humidMax;
-   // var humidMin
-   // let wind;
-   // var windMax;
-   // var windMin;
 
    var fiveDayMaxMinArr;
 
@@ -467,7 +548,9 @@ $(document).ready(function() {
    }
 
    
-   
+})
+}
+init();   
    
 
 
