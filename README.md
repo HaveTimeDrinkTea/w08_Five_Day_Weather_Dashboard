@@ -14,7 +14,10 @@ The JScript and JQuery will produce the output dyanmically to the webpage pages 
 
 
 ### Methodology: Pseudo Code
-* Get the OpenWeather APIs for getting the coordinates of a city, for the current weather conditions and the five-day weather forecast.
+* Get the OpenWeather APIs for getting the
+  * coordinates of a city, 
+  * current weather conditions and 
+  * five-day weather forecast.
 * On page load, render the weather details for a default city (london)
 * Create a predefined list of cities to act as "search history" on page load.
   * When a user search for a city, check that it is not already one of the search buttons.
