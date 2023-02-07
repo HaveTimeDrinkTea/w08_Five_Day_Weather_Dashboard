@@ -98,13 +98,11 @@ $(document).ready(function() {
 
             locCorr.lat = resLocation.coord.lat;
             locCorr.lon = resLocation.coord.lon;
-
-            // User input validation before getting weather data
-
+            renderSearchButtons();
             getWeather();
             get5DayForecast();
 
-
+            // User input validation before getting weather data
       }).fail(function(e) {
          // console.log("error is:", e)
          // console.log("response:", e.responseJSON);
@@ -116,9 +114,15 @@ $(document).ready(function() {
 
          if (isError === false) {
             searchBtnStoredArr = JSON.parse(localStorage.getItem("searchBtnArr"));
-            if (!(searchBtnStoredArr.includes(cityName))) {
+
+            for (let i = 0; i < searchBtnStoredArr.length; i++) {
+               searchBtnStoredArr[i] = searchBtnStoredArr[i].toLowerCase();
+            };
+
+            if (
+               (!(searchBtnStoredArr.includes(cityName))) || (!(searchBtnStoredArr.includes(cityName.toLowerCase())))) {
                searchBtnStoredArr.pop();
-               searchBtnStoredArr.unshift(cityName);
+               searchBtnStoredArr.unshift(cityName.toLowerCase());
                localStorage.setItem("searchBtnArr",JSON.stringify(searchBtnStoredArr));
                renderSearchButtons();
             };
