@@ -170,7 +170,7 @@ $(document).ready(function() {
             queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
             //get the coordinates of city based on user input.
             $.ajax({
-               url: queryUrlGetLocBtn,
+               url: queryUrlGetLoc,
                method: "GET"
                }).then(function(resLocation) {
 
@@ -196,21 +196,21 @@ $(document).ready(function() {
    //--------------------------------        
    //-- 3.1 Get current weather data
 
-   let currTemp;
-   let currHumid;
-   let currWind;
-   let currFeelsLike;
-   let currIconID;
-   let currIconDesc;
-   let currSunRise;
-   let currSunSet;
-   let timeZone; //Shift in seconds from UTC
+   var currTemp;
+   var currHumid;
+   var currWind;
+   var currFeelsLike;
+   var currIconID;
+   var currIconDesc;
+   var currSunRise;
+   var currSunSet;
+   var timeZone; //Shift in seconds from UTC
 
 
    //--------------------------------        
    //-- 3.2 function to set background colour based on temperature
 
-   let bgColorClass;
+   var bgColorClass;
 
    function setBgColor(temp) {
       if (temp >= 35) {
@@ -244,7 +244,7 @@ $(document).ready(function() {
    //--------------------------------        
    //-- 3.3 Get Current weather and render it
 
-   let currHourLocalTime; 
+   var currHourLocalTime; 
 
    function getWeather() {
       // Get the current weather data for a location
@@ -273,7 +273,7 @@ $(document).ready(function() {
 
             $("#currDateTime").text(getDateTimeFormat(dayjs().valueOf() / 1000, timeZone, "DD-MMM-YYYY, HH:mm"));
 
-            let iconDay = "-n";
+            var iconDay = "-n";
 
             currHourLocalTime = parseInt(getDateTimeFormat(dayjs().valueOf() /1000, timeZone, "H"));
 
@@ -294,7 +294,7 @@ $(document).ready(function() {
 
             //-- set background colour based on temperature
 
-            let bgEl = $("#currCityWeather");
+            var bgEl = $("#currCityWeather");
    
             bgEl.removeClass();
             bgEl.addClass("table table-sm table-borderless tableWeather center " + setBgColor(currTemp));
@@ -350,7 +350,7 @@ $(document).ready(function() {
 
             for (let i = 0; i < results.list.length; i++) {
 
-               let arrayDateUnix = (results.list[i].dt * 1000) + forecastTimeZone;            
+               var arrayDateUnix = (results.list[i].dt * 1000) + forecastTimeZone;            
 
                dayDiff = dayjs(arrayDateUnix).diff(foreCastMidnightStartUnix, "day");
 
@@ -389,8 +389,8 @@ $(document).ready(function() {
          //-- 4.2 Compute the Max and Min of each day in 5Day forecast 
 
          var dayCnt = 0;
-         let dateStringForecast;
-         let avgTemp;
+         var dateStringForecast;
+         var avgTemp;
 
          function getPeriodMaxMin(period_array) {
 
@@ -403,9 +403,9 @@ $(document).ready(function() {
             let wind;
             var windMax;
             var windMin;
-            let iconDesc;
-            let iconID;
-            let nowLocalHour
+            var iconDesc;
+            var iconID;
+            var nowLocalHour
 
             for (let i = 0; i < period_array.length; i++) {
 
@@ -553,6 +553,7 @@ $(document).ready(function() {
 
 })
 }
+
 init();   
 
 
