@@ -10,6 +10,7 @@ The JScript and JQuery will produce the output dyanmically to the webpage pages 
 
 ### NOTE:
  * That for some reason(s) unknown, the text "testing" is actually a valid city according to openweather API. 
+ * A "delete search history" button has been added to clear and reset the pre-set / user search history buttons after the app was submitted for evaluation.
    
 
 
