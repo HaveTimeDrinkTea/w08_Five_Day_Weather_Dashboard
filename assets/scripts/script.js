@@ -14,9 +14,9 @@ $(document).ready(function() {
    //--==============================================
    var APIKey = "23c1d2729442f28b96176ff1560c919f";
 
-   let queryUrlGetLoc;
+   var queryUrlGetLoc;
 
-   let locCorr = {
+   var locCorr = {
       lat : "",
       lon : "",
    };
@@ -24,6 +24,7 @@ $(document).ready(function() {
    var cityName;
 
    function init() {
+
       queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/weather?q=london&appid=" + APIKey;
 
       //get the coordinates of city based on user input.
@@ -169,7 +170,7 @@ $(document).ready(function() {
             queryUrlGetLoc = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
             //get the coordinates of city based on user input.
             $.ajax({
-               url: queryUrlGetLoc,
+               url: queryUrlGetLocBtn,
                method: "GET"
                }).then(function(resLocation) {
 
