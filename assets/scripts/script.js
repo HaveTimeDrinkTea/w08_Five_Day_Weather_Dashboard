@@ -540,11 +540,21 @@ $(document).ready(function() {
          });
          // end of function 5dayforecast()
    }
-
    
+   //--==============================================   
+   //-- 5. Delete History
+   //--==============================================     
+
+   $("#clearHistory").on("click", function() {
+      localStorage.removeItem("searchBtnArr");
+      document.location.reload();
+   });
+
 })
 }
 init();   
+
+
 
 
    //--====================== 
