@@ -35,14 +35,15 @@ $(document).ready(function() {
 
             locCorr.lat = resLocation.coord.lat;
             locCorr.lon = resLocation.coord.lon;
-            cityName = resLocation.name;
+            cityName = "london";
 
             // User input validation before getting weather data
 
             getWeather();
             get5DayForecast();
-
-
+         
+})
+}
    //-- here
    var searchBtnStoredArr;
    var searchBtnDefaultArr;
@@ -133,7 +134,7 @@ $(document).ready(function() {
       ;
    }
 
-   getLocCorr(cityName);
+   // getLocCorr(cityName);
 
    //--------------------------------        
    //-- 2.3 Get User Input
@@ -551,8 +552,8 @@ $(document).ready(function() {
       document.location.reload();
    });
 
-})
-}
+// })
+// }
 
 init();   
 
